@@ -28,7 +28,7 @@ export default function Profile() {
     const profile = mockProfile;
     const GET_CURRENT_MOVES = gql`
     query {
-      moves {
+      getUserMoves (userId: 7, status: "active") {
         id
         title
         location
@@ -44,8 +44,8 @@ export default function Profile() {
 
   const GET_PAST_MOVES = gql`
     query {
-      moves {
-        id
+        getUserMoves (userid: 7, status: "past") {
+            id
         title
         location
         time
@@ -65,7 +65,6 @@ export default function Profile() {
         console.log(currentError);
         console.log(currentData);
 
-        console.log(pastData);
 
         if (!currentLoading && !currentError) {
             setCurrentMoves(currentData.moves);
