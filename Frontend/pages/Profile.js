@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { GoogleLogin } from '@react-oauth/google';
 
 import {
     Button,
@@ -25,6 +26,14 @@ export default function Profile() {
     return (
         <View className="flex">
             <View className='flex-none items-center h-64 p-10'>
+                <GoogleLogin
+                    onSuccess={credentialResponse => {
+                        console.log(credentialResponse);
+                    }}
+                    onError={() => {
+                        console.log('Login Failed');
+                    }}
+                />;
                 <Text className="font-bold text-6xl">{mockProfile.name}</Text>
                 <Text>{mockProfile.totalMoves}</Text>
             </View>

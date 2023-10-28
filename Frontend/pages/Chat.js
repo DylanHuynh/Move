@@ -4,6 +4,7 @@ import { Modal, Portal, Button, IconButton } from 'react-native-paper';
 import { StyleSheet, Text, View, Keyboard } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat'
 
+
 export default function Chat() {
     const [visible, setVisible] = useState(false);
     const [messages, setMessages] = useState([
@@ -29,7 +30,10 @@ export default function Chat() {
     }
     const containerStyle = { backgroundColor: 'white', height: '40%', width: '100%', borderTopLeftRadius: '20%', borderTopRightRadius: '20%' };
 
+    // // GOOGLE API KEY FUNCTIONS
+
     const onSend = useCallback((messages = []) => {
+
         //TODO: send message to BE probably updateMessage(newMessage)
         setMessages(previousMessages =>
             GiftedChat.append(previousMessages, messages),
@@ -67,6 +71,8 @@ export default function Chat() {
                 },
             },
         ])
+        gapiLoaded();
+        gisLoaded();
     }, [])
 
     return (
@@ -89,7 +95,7 @@ export default function Chat() {
                 <Modal className="flex justify-end" visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
                     <View className="rounded-t-2xl h-full bg-slate-200">
                         <View className="flex flex-row-reverse justify-between">
-                            <IconButton icon="close-circle-outline" onPress={hideModal}/>
+                            <IconButton icon="close-circle-outline" onPress={hideModal} />
                         </View>
                         <Text className="text-xl text-center p-4">Move found! Do you want to accept or decline?</Text>
                         <View className="h-3/5 justify-between p-12">
