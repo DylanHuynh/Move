@@ -7,7 +7,7 @@ async function startServer() {
   const app = express();
   const server = new ApolloServer({ typeDefs, resolvers });
   server.applyMiddleware({ app });
-server
+
   const PORT = process.env.PORT || 4002;
   
   app.listen(PORT, () => {
