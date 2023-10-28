@@ -12,11 +12,12 @@ async function getMoveTitle(eventDescription) {
       {
           headers: { Authorization: `Bearer ${API_TOKEN}`, "Content-Type": "application/json"},
           method: "POST",
-          body: `{"model": "${MODEL}", "prompt": "${prompts.generateMoveTitlePrompt + "\n" + eventDescription}", "temperature": 0.7}`
+          body: `{"model": "${MODEL}", "prompt": "${"Description: " + eventDescription + "\n" prompts.generateMoveTitlePrompt}", "temperature": 0.7, "topP": 0.7, "topK": 50}`
       }
   );
   const result = await response.json();
-  return result;
+  console.log(result)
+  return result.output.choices[0].text;
 }
 
 module.exports = getMoveTitle;
