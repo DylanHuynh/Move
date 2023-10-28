@@ -8,7 +8,7 @@ export default function SignIn() {
   const navigation = useNavigation();
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const signInWithGoogle = () => (
+  const signInWithCredentials = () => (
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed up
@@ -29,7 +29,7 @@ export default function SignIn() {
       <Text variant="displaySmall">join the move</Text>
       <TextInput label="email" value={email} mode={'outlined'} onChangeText={email => setEmail(email)} />
       <TextInput label="password" value={password} mode={'outlined'} onChangeText={password => setPassword(password)} />
-      <Button textColor="white" className="bg-primary-color" onPress={signInWithGoogle} mode="contained">sign up</Button>
+      <Button textColor="white" className="bg-primary-color" onPress={signInWithCredentials} mode="contained">sign up</Button>
     </View>
   );
 }

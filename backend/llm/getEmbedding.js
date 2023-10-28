@@ -18,4 +18,4 @@ async function getEmbeddingFromHF(text) {
     return result;
 }
 
-module.exports = getEmbeddingFromHF;
+module.exports = {getEmbeddingFromHF};

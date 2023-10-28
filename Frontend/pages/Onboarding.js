@@ -32,24 +32,31 @@ export default function Onboarding() {
         "concerts and music",
         "secondhand markets"
     ];
+    const [selectedPreferences, setSelectedPreferences] = useState([])
+    const [mode, setMode] = useState(-1)
+
+    const updateSelectedPreferences = (index) => {
+        const updatedPreferences = [...selectedPreferences]
+            
+        if (selectedPreferences.includes(index)) {
+            setSelectedPreferences([...selectedPreferences].filter((pref) => pref != index))
+            console.log("how", selectedPreferences)
+        } else {
+            updatedPreferences.push(index);
+            setSelectedPreferences(updatedPreferences)
+        }
+    }
 
     return (
         <View style={styles.container}>
             <Text variant="displaySmall">what's the move</Text>
             <Text variant="bodyMedium">for us to personalize your friday night recommendations</Text>
-            {/* <Button onPress={console.log()} mode="outlined">being active</Button>
-            <Button onPress={console.log()} mode="outlined">meeting new people</Button>
-            <Button onPress={console.log()} mode="outlined">nom nom nom</Button>
-            <Button onPress={console.log()} mode="outlined">touch some grass</Button>
-            <Button onPress={console.log()} mode="outlined">dance all night</Button>
-            <Button onPress={console.log()} mode="outlined">concerts and music</Button>
-            <Button onPress={console.log()} mode="outlined">secondhand markets</Button> */}
-            {preferences.map((pref) => {
+            {preferences.map((pref, index) => {
                 return (
-                    <Button mode="outlined" textColor="black" className="bg-secondary-color">{pref}</Button>
+                    <Button key={index} mode={selectedPreferences.includes(index) ? "contained" : "contained-tonal"} textColor="black" onPress={() => updateSelectedPreferences(index)}>{pref}</Button>
                 )
             })}
-            <Button onPress={console.log()} mode="contained" className="bg-primary-color">let's move</Button>
+            <Button onPress={() => console.log("hello")} mode="contained" className="bg-primary-color">let's move</Button>
         </View>
     );
 }
