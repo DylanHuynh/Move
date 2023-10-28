@@ -1,6 +1,6 @@
 const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
-const typeDefs = require('./schema.graphql');
+const typeDefs = require('./schema.graphql');  // Assuming this exports a string or array of strings
 const resolvers = require('./resolvers');
 
 async function startServer() {

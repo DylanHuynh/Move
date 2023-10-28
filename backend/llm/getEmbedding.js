@@ -1,5 +1,5 @@
 fetch = require("node-fetch");
-require('dotenv').config({ path: 'llm/.env' });
+require('dotenv').config();
 
 const HF_ENDPOINT_URL = process.env.HF_ENDPOINT_URL;
 const HF_API_TOKEN = process.env.HF_API_TOKEN;
