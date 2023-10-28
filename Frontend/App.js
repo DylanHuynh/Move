@@ -5,13 +5,14 @@ import { NavigationContainer } from '@react-navigation/native';
 
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View } from 'react-native';
-import { PaperProvider } from 'react-native-paper';
+import { PaperProvider } from 'react-native-paper'
 
-import Chat from './pages/Chat';
-import Profile from './pages/Profile';
+import AboutYou from './pages/AboutYou'
+import Chat from './pages/Chat'
+import Profile from './pages/Profile'
+import SignIn from './pages/SignIn'
+import Onboarding from './pages/Onboarding'
 import Explore from './pages/Explore';
-import SignIn from './pages/SignIn';
-import Onboarding from './pages/Onboarding';
 
 const Tab = createBottomTabNavigator();
 
@@ -22,10 +23,10 @@ export default function App() {
     <PaperProvider>
       <NavigationContainer>
         <Tab.Navigator>
-          <Tab.Screen name="Onboarding" component={Onboarding} />
+        <Tab.Screen name="About You" component={AboutYou} />
+        <Tab.Screen name="Onboarding" component={Onboarding} />
           <Tab.Screen name="Sign In" component={SignIn} />
           <Tab.Screen name="Chat" component={Chat} />
-          <Tab.Screen name="Explore" component={Explore} />
           <Tab.Screen name="Profile" component={Profile} />
         </Tab.Navigator>
       </NavigationContainer>
