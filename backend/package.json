@@ -15,10 +15,15 @@
   "dependencies": {
     "@prisma/client": "^5.5.2",
     "apollo-server-express": "^3.12.1",
+<<<<<<< Updated upstream
     "dotenv": "^16.3.1",
+=======
+    "axios": "^1.6.0",
+>>>>>>> Stashed changes
     "express": "^4.18.2",
     "graphiql": "^3.0.6",
     "graphql": "^16.8.1",
+    "graphql-request": "^6.1.0",
     "graphql-scalars": "^1.22.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
