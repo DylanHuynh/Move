@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Modal, Portal, Button, IconButton } from 'react-native-paper';
 import { StyleSheet, Text, View, Keyboard } from 'react-native';
@@ -99,8 +99,6 @@ export default function Chat() {
                     </View>
                 </Modal>
             </Portal>
-
-
 
         </>
 

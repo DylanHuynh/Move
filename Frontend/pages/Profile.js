@@ -14,7 +14,6 @@ import {
     TabsProvider
 } from 'react-native-paper-tabs';
 import { Dimensions, StyleSheet, View, Animated, Pressable, Text } from 'react-native';
-import { styled } from 'nativewind';
 
 export default function Profile() {
     const mockProfile = {
