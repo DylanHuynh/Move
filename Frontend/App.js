@@ -7,16 +7,11 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View } from 'react-native';
 import { PaperProvider } from 'react-native-paper';
 
-<<<<<<< HEAD
-import Chat from './pages/Chat'
-import Profile from './pages/Profile'
-import SignIn from './pages/SignIn'
-import Onboarding from './pages/Onboarding'
-=======
 import Chat from './pages/Chat';
 import Profile from './pages/Profile';
 import Explore from './pages/Explore';
->>>>>>> c206128a0bc54c0a3c8e2aa79dba6986265b2469
+import SignIn from './pages/SignIn';
+import Onboarding from './pages/Onboarding';
 
 const Tab = createBottomTabNavigator();
 
