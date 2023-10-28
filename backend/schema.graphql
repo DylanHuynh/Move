@@ -1,20 +1,82 @@
 const { gql } = require('apollo-server-express');
+const { GraphQLDateTime } = require('graphql-scalars');
 
 const typeDefs = gql`
+  scalar DateTime
   type Query {
-    users: [User!]!
-    user(id: ID!): User
-  }
+  users: [User!]!
+  user(id: Int!): User
+  chats: [Chat!]!
+  chat(id: Int!): Chat
+  moves: [Move!]!
+  move(id: Int!): Move
+  messages: [Message!]!
+  message(id: Int!): Message
+}
 
-  type Mutation {
-    createUser(name: String!, email: String!): User!
-  }
+type Mutation {
+  createUser(name: String!, email: String!): User!
+  createChat(ownerId: Int!, type: String!): Chat!
+  createMove(title: String!, userId: Int!, location: String!, time: DateTime!, description: String!, chatId: Int!, type: String!, status: String!): Move!
+  createMessage(chatId: Int!, timestamp: DateTime!, authorId: Int!, text: String!): Message!
+  createPreferences(userId: Int!, preference: String!): Preferences!
+  deleteUser(userId: Int!): Boolean!
+  deleteUsers: Boolean!
+}
 
-  type User {
-    id: ID!
-    name: String!
-    email: String!
-  }
+type User {
+  id: Int!
+  name: String!
+  email: String!
+  calendarIds: [Int!]!
+  friendIds: [Int!]!
+  moves: [Move!]!
+  preferences: Preferences!
+  chats: [Chat!]!
+  messages: [Message!]!
+}
+
+type Chat {
+  id: Int!
+  friendIds: [Int!]!
+  messageIds: [Int!]!
+  creationTime: DateTime!
+  owner: User!
+  type: String!
+  messages: [Message!]!
+  moves: [Move!]!
+}
+
+type Move {
+  id: Int!
+  title: String!
+  location: String!
+  time: DateTime!
+  userId: Int!
+  user: User!
+  description: String!
+  chatId: Int!
+  chat: Chat!
+  type: String!
+  status: String!
+}
+
+type Message {
+  id: Int!
+  chatId: Int!
+  chat: Chat!
+  timestamp: DateTime!
+  authorId: Int!
+  author: User!
+  text: String!
+}
+
+type Preferences {
+  id: Int!
+  userId: Int!
+  user: User!
+  alcohol: Boolean!
+}
 `;
 
 module.exports = typeDefs;

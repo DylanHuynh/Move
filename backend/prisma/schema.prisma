@@ -7,8 +7,67 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id    Int    @id @default(sequence())
-  name  String
-  email String @unique
+model Chat {
+  id           Int        @id @default(sequence())
+  friendIds    Int[]
+  messageIds   Int[]
+  creationTime DateTime   @default(now())
+  owner        User       @relation(fields: [ownerId], references: [id])
+  ownerId      Int
+  type         String
+  messages     Message[]
+  moves        Move[]
 }
+
+model User {
+  id           Int         @id @default(sequence())
+  name         String
+  email        String     @unique
+  calendarIds  Int[]
+  friendIds    Int[]
+  moveIds      Move[]
+  preferences Preferences?
+  chats        Chat[]
+  messages     Message[]
+} // add age param
+
+model Move {
+  id          Int      @id @default(sequence())
+  title       String   
+  location    String
+  time        DateTime
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int
+  description String
+  chatId      Int
+  chat        Chat     @relation(fields: [chatId], references: [id])
+  type        String
+  status      String
+}
+
+model Message {
+  id        Int      @id @default(sequence())
+  chatId    Int
+  chat      Chat     @relation(fields: [chatId], references: [id])
+  timestamp DateTime @default(now())
+  authorId  Int
+  author    User     @relation(fields: [authorId], references: [id])
+  text      String
+}
+
+model Preferences {
+  id         Int    @id @default(sequence())
+  userId     Int    @unique
+  user       User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  alcohol    Boolean
+}
+
+
+
+// Some assumptions made:
+
+// A user can have multiple chats, so the relationship is set as such.
+// A chat can have multiple messages, so a one-to-many relationship is set between them.
+// A user can have multiple moves, so the relationship is set as such.
+// A chat can have multiple moves, so the relationship is set as such.
+// Each user has one unique preference. If a user can have multiple preferences, then the model needs adjustments.
