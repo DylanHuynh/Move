@@ -21,7 +21,6 @@ export default function AboutYou() {
     const currentDate = selectedDate;
     setDate(currentDate);
   };
-  const GOOGLE_PLACES_API_KEY = env("GOOGLE_PLACES_API_KEY");
 
   // useEffect(() => {
   //     (async () => {
@@ -66,13 +65,13 @@ export default function AboutYou() {
             console.log(city);
           }}
           query={{
-            key: GOOGLE_PLACES_API_KEY,
+            key: "AIzaSyCnGMj8SzB61nPZ4Ljic6E6sj1pULOX9g4",
             language: "en",
           }}
         />
       </View>
-      
-      
+
+
     </View>
   );
 }

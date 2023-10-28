@@ -1,10 +1,10 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
-
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View } from 'react-native';
+import { AppRegistry, StyleSheet, View } from 'react-native';
 import { PaperProvider } from 'react-native-paper'
 
 import AboutYou from './pages/AboutYou'
@@ -16,21 +16,31 @@ import Explore from './pages/Explore';
 
 const Tab = createBottomTabNavigator();
 
+// Initialize Apollo Client
+const client = new ApolloClient({
+  uri: 'localhost:4000/graphql',
+  cache: new InMemoryCache()
+});
+
 export default function App() {
 
   return (
 
-    <PaperProvider>
-      <NavigationContainer>
-        <Tab.Navigator>
-        <Tab.Screen name="About You" component={AboutYou} />
-        <Tab.Screen name="Onboarding" component={Onboarding} />
-          <Tab.Screen name="Sign In" component={SignIn} />
-          <Tab.Screen name="Chat" component={Chat} />
-          <Tab.Screen name="Profile" component={Profile} />
-        </Tab.Navigator>
-      </NavigationContainer>
-    </PaperProvider>
+    <ApolloProvider client={client}>
+      <PaperProvider>
+        <NavigationContainer>
+          <Tab.Navigator>
+            <Tab.Screen name="Explore" component={Explore} />
+            <Tab.Screen name="About You" component={AboutYou} />
+            <Tab.Screen name="Onboarding" component={Onboarding} />
+            <Tab.Screen name="Sign In" component={SignIn} />
+            <Tab.Screen name="Chat" component={Chat} />
+            <Tab.Screen name="Profile" component={Profile} />
+          </Tab.Navigator>
+        </NavigationContainer>
+      </PaperProvider>
+    </ApolloProvider>
+
   );
 }
 
@@ -42,3 +52,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+
+AppRegistry.registerComponent('Move', () => App);
