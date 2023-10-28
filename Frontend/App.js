@@ -1,9 +1,5 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { NavigationContainer } from "@react-navigation/native";
-
-import { StyleSheet, View } from "react-native";
-import { PaperProvider } from "react-native-paper";
 
 import AboutYou from "./pages/AboutYou";
 import Chat from "./pages/Chat";
@@ -12,15 +8,28 @@ import SignIn from "./pages/SignIn";
 import Onboarding from "./pages/Onboarding";
 import Explore from "./pages/Explore";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { NavigationContainer } from '@react-navigation/native';
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+
+import { StatusBar } from 'expo-status-bar';
+import { AppRegistry, StyleSheet, View } from 'react-native';
+import { PaperProvider } from 'react-native-paper'
 
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
+// Initialize Apollo Client
+const client = new ApolloClient({
+  uri: 'http://localhost:4001/graphql',
+  cache: new InMemoryCache()
+});
+
 export default function App() {
   const signedIn = true;
 
   return (
+    <ApolloProvider client={client}>
     <PaperProvider>
       <NavigationContainer>
         {signedIn ? (
@@ -39,6 +48,7 @@ export default function App() {
         )}
       </NavigationContainer>
     </PaperProvider>
+    </ApolloProvider>
   );
 }
 
@@ -50,3 +60,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
+
+AppRegistry.registerComponent('Move', () => App);

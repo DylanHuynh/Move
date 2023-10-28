@@ -71,8 +71,6 @@ export default function Chat() {
                 },
             },
         ])
-        // gapiLoaded();
-        // gisLoaded();
     }, [])
 
     return (
