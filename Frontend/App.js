@@ -18,7 +18,7 @@ const Tab = createBottomTabNavigator();
 
 // Initialize Apollo Client
 const client = new ApolloClient({
-  uri: 'localhost:4000/graphql',
+  uri: 'http://localhost:4001/graphql',
   cache: new InMemoryCache()
 });
 
