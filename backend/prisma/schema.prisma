@@ -7,8 +7,66 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id    Int    @id @default(sequence())
-  name  String
-  email String @unique
+model Chat {
+  id           Int        @id @default(sequence())
+  friendIDs    Int[]
+  messageIDs   Int[]
+  creationTime DateTime   @default(now())
+  owner        User       @relation(fields: [ownerId], references: [id])
+  ownerId      Int
+  type         String
+  messages     Message[]
+  moves        Move[]
 }
+
+model User {
+  id           Int         @id @default(sequence())
+  name         String
+  email        String     @unique
+  calendarIDs  Int[]
+  friendIDs    Int[]
+  moveIDs      Move[]
+  preferenceIDs Preferences[]
+  chats        Chat[]
+  messages     Message[]
+}
+
+model Move {
+  id          Int      @id @default(sequence())
+  location    String
+  time        DateTime
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int
+  description String
+  chatID      Int
+  chat        Chat     @relation(fields: [chatID], references: [id])
+  type        String
+  status      String
+}
+
+model Message {
+  id        Int      @id @default(sequence())
+  chatID    Int
+  chat      Chat     @relation(fields: [chatID], references: [id])
+  timestamp DateTime
+  authorID  Int
+  author    User     @relation(fields: [authorID], references: [id])
+  text      String
+}
+
+model Preferences {
+  id         Int    @id @default(sequence())
+  userID     Int    @unique
+  user       User   @relation(fields: [userID], references: [id])
+  preference String
+}
+
+
+
+// Some assumptions made:
+
+// A user can have multiple chats, so the relationship is set as such.
+// A chat can have multiple messages, so a one-to-many relationship is set between them.
+// A user can have multiple moves, so the relationship is set as such.
+// A chat can have multiple moves, so the relationship is set as such.
+// Each user has one unique preference. If a user can have multiple preferences, then the model needs adjustments.
