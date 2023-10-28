@@ -1,5 +1,5 @@
 const express = require('express');
-const embed = require('./embedding')
+const embed = require('./getEmbedding')
 const getMoveTitle = require('./getMoveTitle')
 
 async function startServer() {
@@ -9,7 +9,7 @@ async function startServer() {
   
   app.use(express.json());
 
-  app.post('/embedding', async (req, res) => {
+  app.post('/get-embedding', async (req, res) => {
     const textData = req.body.text;
     if (textData) {
       res.send(await embed(textData));
@@ -18,7 +18,7 @@ async function startServer() {
     }
   });
 
-  app.post('/generate_title', async (req, res) => {
+  app.post('/get-move-title', async (req, res) => {
     const moveDescription = req.body.text;
     if (moveDescription) {
       res.send(await getMoveTitle(moveDescription));
