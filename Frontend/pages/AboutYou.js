@@ -21,7 +21,7 @@ export default function AboutYou() {
     const currentDate = selectedDate;
     setDate(currentDate);
   };
-  const GOOGLE_PLACES_API_KEY = "AIzaSyCnGMj8SzB61nPZ4Ljic6E6sj1pULOX9g4";
+  const GOOGLE_PLACES_API_KEY = env("GOOGLE_PLACES_API_KEY");
 
   // useEffect(() => {
   //     (async () => {
