@@ -15,12 +15,14 @@ const resolvers = {
   Mutation: {
     createUser: (_, { name, email }) => prisma.user.create({ data: { name, email } }),
     createChat: (_, { ownerId, type }) => prisma.chat.create({ data: { ownerId, type } }),
-    createMove: (_, { userId, location, time, description, chatId, type, status }) =>
-      prisma.move.create({ data: { userId, location, time, description, chatId, type, status } }),
-    createMessage: (_, { chatId, timestamp, authorId, text }) =>
-      prisma.message.create({ data: { chatId, timestamp, authorId, text } }),
+    createMove: (_, { title, userId, location, time, description, chatId, type, status }) =>
+      prisma.move.create({ data: { title, userId, location, time, description, chatId, type, status } }),
+    createMessage: (_, { chatId, authorId, text }) =>
+      prisma.message.create({ data: { chatId, authorId, text } }),
     createPreferences: (_, { userId, preference }) =>
       prisma.preferences.create({ data: { userId, preference } }),
+    deleteUser: (_, { userId }) => prisma.user.delete({ where: { id: userId }, }),
+    deleteUsers: (_, {}) => prisma.user.deleteMany({})
   },
   User: {
     chats: (parent) => prisma.user.findUnique({ where: { id: parent.id } }).chats(),
