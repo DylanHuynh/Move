@@ -9,8 +9,8 @@ datasource db {
 
 model Chat {
   id           Int        @id @default(sequence())
-  friendIDs    Int[]
-  messageIDs   Int[]
+  friendIds    Int[]
+  messageIds   Int[]
   creationTime DateTime   @default(now())
   owner        User       @relation(fields: [ownerId], references: [id])
   ownerId      Int
@@ -23,41 +23,42 @@ model User {
   id           Int         @id @default(sequence())
   name         String
   email        String     @unique
-  calendarIDs  Int[]
-  friendIDs    Int[]
-  moveIDs      Move[]
-  preferenceIDs Preferences[]
+  calendarIds  Int[]
+  friendIds    Int[]
+  moveIds      Move[]
+  preferenceIds Preferences[]
   chats        Chat[]
   messages     Message[]
-}
+} // add age param
 
 model Move {
   id          Int      @id @default(sequence())
+  title       String   
   location    String
   time        DateTime
   user        User     @relation(fields: [userId], references: [id])
   userId      Int
   description String
-  chatID      Int
-  chat        Chat     @relation(fields: [chatID], references: [id])
+  chatId      Int
+  chat        Chat     @relation(fields: [chatId], references: [id])
   type        String
   status      String
 }
 
 model Message {
   id        Int      @id @default(sequence())
-  chatID    Int
-  chat      Chat     @relation(fields: [chatID], references: [id])
-  timestamp DateTime
-  authorID  Int
-  author    User     @relation(fields: [authorID], references: [id])
+  chatId    Int
+  chat      Chat     @relation(fields: [chatId], references: [id])
+  timestamp DateTime @default(now())
+  authorId  Int
+  author    User     @relation(fields: [authorId], references: [id])
   text      String
 }
 
 model Preferences {
   id         Int    @id @default(sequence())
-  userID     Int    @unique
-  user       User   @relation(fields: [userID], references: [id])
+  userId     Int    @unique
+  user       User   @relation(fields: [userId], references: [id])
   preference String
 }
 
