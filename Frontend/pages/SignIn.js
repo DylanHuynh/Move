@@ -14,8 +14,29 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
 } from "firebase/auth";
+
+import { GoogleSignin } from "@react-native-community/google-signin";
+
 import { initializeApp } from "firebase/app";
 
+GoogleSignin.configure({
+  scopes: ['https://www.googleapis.com/auth/calendar.readonly'],
+});
+
+try {
+  await GoogleSignin.hasPlayServices();
+  const userInfo = await GoogleSignin.signIn();
+  const accessToken = userInfo.accessToken;
+
+  // Now use the access token to fetch calendar data
+  const calendarData = await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events', {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  const calendarJson = await calendarData.json();
+  console.log(calendarJson);
+} catch (error) {
+  console.error(error);
+}
 
 // GoogleSignin.configure({
 //   webClientId: '797668500397-j6u9050o3ahviks4kkbl983ej201rn6o.apps.googleusercontent.com',
