@@ -4,11 +4,11 @@ const prompts = require('./prompts')
 
 const ENDPOINT = process.env.TOGETHER_ENDPOINT_URL;
 const API_TOKEN = process.env.TOGETHER_API_TOKEN;
-const MODEL = "garage-bAInd/Platypus2-70B-instruct"
+const MODEL = "togethercomputer/llama-2-70b-chat"
 
 async function getMoveTitle(eventDescription) {
-  const body = `{"model": "${MODEL}", "prompt": "${"Description: " + eventDescription + "\n" + prompts.generateMoveTitlePrompt}", "temperature": 0.7, "topP": 0.7, "topK": 50}`
-  console.log(body);
+  const body = `{"model": "${MODEL}", "prompt": "${"Description: " + eventDescription + ". " + prompts.generateMoveTitlePrompt}", "stop": "."}`
+  console.log( `"${"Description: " + eventDescription + ". " + prompts.generateMoveTitlePrompt}"`);
   const response = await fetch(
       ENDPOINT,
       {
