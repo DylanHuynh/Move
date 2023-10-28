@@ -15,7 +15,11 @@
     "@react-navigation/bottom-tabs": "^6.5.11",
     "expo": "~49.0.15",
     "expo-status-bar": "~1.6.0",
+<<<<<<< HEAD
+    "firebase": "^10.5.2",
+=======
     "nativewind": "^2.0.11",
+>>>>>>> c206128a0bc54c0a3c8e2aa79dba6986265b2469
     "react": "18.2.0",
     "react-native": "0.72.6",
     "react-native-gifted-chat": "^2.4.0",
