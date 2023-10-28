@@ -39,8 +39,8 @@ export default function Explore() {
                             <Text variant="bodyMedium">{move.description}</Text>
                         </Card.Content>
                         <Card.Actions>
-                            <Button>Cancel</Button>
-                            <Button>Move!</Button>
+                            <Button>cancel</Button>
+                            <Button>move!</Button>
                         </Card.Actions>
                     </Card>
                 )

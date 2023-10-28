@@ -25,20 +25,20 @@ export default function Profile() {
     return (
         <View className="flex">
             <View className='flex-none items-center h-64 p-10'>
-                <Text className="font-bold text-6xl">{mockProfile.name}</Text>
+                <Text className="font-bold text-4xl">{mockProfile.name}</Text>
                 <Text>{mockProfile.totalMoves}</Text>
             </View>
 
             <View className="flex-auto" >
                 <TabsProvider
-                    defaultIndex={0}
+                    defaultIndex={1}
                 // onChangeIndex={handleChangeIndex} optional
                 >
                     <Tabs
                     // uppercase={false} // true/false | default=true (on material v2) | labels are uppercase
                     // showTextLabel={false} // true/false | default=false (KEEP PROVIDING LABEL WE USE IT AS KEY INTERNALLY + SCREEN READERS)
                     // iconPosition // leading, top | default=leading
-                    // style={{ backgroundColor:'#fff' }} // works the same as AppBar in react-native-paper
+                    style={{ backgroundColor:'#fff' }} // works the same as AppBar in react-native-paper
                     // dark={false} // works the same as AppBar in react-native-paper
                     // theme={} // works the same as AppBar in react-native-paper
                     // mode="scrollable" // fixed, scrollable | default=fixed

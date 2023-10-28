@@ -46,7 +46,7 @@ export default function SignIn() {
       <Text variant="displaySmall">join the move</Text>
       <TextInput label="email" value={email} mode={'outlined'} onChangeText={email => setEmail(email)}/>
       <TextInput label="password" value={password} mode={'outlined'} onChangeText={password => setPassword(password)}/>
-      <Button onPress={signInWithGoogle} mode="contained">sign up</Button>
+      <Button textColor="white" className="bg-primary-color" onPress={signInWithGoogle} mode="contained">sign up</Button>
     </View>
   );
 }
