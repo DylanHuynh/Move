@@ -1,5 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const getMoveTitle = require('./llm/getMoveTitle')
 
 const resolvers = {
   Query: {
@@ -15,8 +16,9 @@ const resolvers = {
   Mutation: {
     createUser: (_, { name, email }) => prisma.user.create({ data: { name, email } }),
     createChat: (_, { ownerId, type }) => prisma.chat.create({ data: { ownerId, type } }),
-    createMove: (_, { title, userId, location, time, description, chatId, type, status }) =>
-      prisma.move.create({ data: { title, userId, location, time, description, chatId, type, status } }),
+    createMove: async (_, { userId, location, time, description, chatId, type, status }) => {
+      const title = await getMoveTitle(description);
+      return prisma.move.create({ data: { title, userId, location, time, description, chatId, type, status } })},
     createMessage: (_, { chatId, authorId, text }) =>
       prisma.message.create({ data: { chatId, authorId, text } }),
     createPreferences: (_, { userId, preference }) =>

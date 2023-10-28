@@ -44,7 +44,7 @@ export default function Explore() {
   const MoveCard = (item) => {
     const moveObj = item['move'];
     return (
-      <View className="bg-white w-full">
+      <View className="bg-white w-full py-4">
         <Card>
           <Card.Cover source={imgSource} />
           <Card.Title title={moveObj.title} subtitle={moveObj.time} />
@@ -65,7 +65,7 @@ export default function Explore() {
   };
 
   return (
-    <View className="h-full w-full bg-white">
+    <View className="h-full w-full bg-white  p-4">
       <FlatList
         data={moves}
         renderItem={renderMoveCard}

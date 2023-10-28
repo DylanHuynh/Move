@@ -21,7 +21,7 @@ async function startServer() {
   app.post('/get-move-title', async (req, res) => {
     const moveDescription = req.body.text;
     if (moveDescription) {
-      res.send(await getMoveTitle(moveDescription));
+      res.send(await geartMoveTitle(moveDescription));
     } else {
       res.send('Please provide text data in the request body.');
     }
