@@ -3,7 +3,7 @@ const axios = require('axios')
 const endpoint = 'http://localhost:4001/graphql';
 
 const graphqlQuery = `
-  query getUsers {
+  query user {
     user(id: $userId) {
       id
       name

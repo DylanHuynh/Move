@@ -26,7 +26,7 @@ model User {
   calendarIds  Int[]
   friendIds    Int[]
   moveIds      Move[]
-  preferenceIds Preferences[]
+  preferences Preferences?
   chats        Chat[]
   messages     Message[]
 } // add age param
@@ -58,8 +58,8 @@ model Message {
 model Preferences {
   id         Int    @id @default(sequence())
   userId     Int    @unique
-  user       User   @relation(fields: [userId], references: [id])
-  preference String
+  user       User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  alcohol    Boolean
 }
 
 

@@ -20,6 +20,8 @@ type Mutation {
   createMove(title: String!, userId: Int!, location: String!, time: DateTime!, description: String!, chatId: Int!, type: String!, status: String!): Move!
   createMessage(chatId: Int!, timestamp: DateTime!, authorId: Int!, text: String!): Message!
   createPreferences(userId: Int!, preference: String!): Preferences!
+  deleteUser(userId: Int!): Boolean!
+  deleteUsers: Boolean!
 }
 
 type User {
@@ -29,7 +31,7 @@ type User {
   calendarIds: [Int!]!
   friendIds: [Int!]!
   moves: [Move!]!
-  preferenceIds: [Int!]!
+  preferences: Preferences!
   chats: [Chat!]!
   messages: [Message!]!
 }
@@ -73,7 +75,7 @@ type Preferences {
   id: Int!
   userId: Int!
   user: User!
-  preference: String!
+  alcohol: Boolean!
 }
 `;
 

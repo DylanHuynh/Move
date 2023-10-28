@@ -21,6 +21,8 @@ const resolvers = {
       prisma.message.create({ data: { chatId, authorId, text } }),
     createPreferences: (_, { userId, preference }) =>
       prisma.preferences.create({ data: { userId, preference } }),
+    deleteUser: (_, { userId }) => prisma.user.delete({ where: { id: userId }, }),
+    deleteUsers: (_, {}) => prisma.user.deleteMany({})
   },
   User: {
     chats: (parent) => prisma.user.findUnique({ where: { id: parent.id } }).chats(),
