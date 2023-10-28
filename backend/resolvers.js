@@ -1,56 +1,47 @@
 const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient({
-    // Specify the log level you want (e.g., 'info', 'warn', 'error', 'query', or 'info,error').
-    log: ['query', 'info', 'error'],
-  });
+const prisma = new PrismaClient();
 
 const resolvers = {
-    Query: {
-      // Fetch all users
-      users: async () => {
-        return prisma.user.findMany();
-      },
-      // Fetch a single user by ID
-      user: async (_, args) => {
-        return prisma.user.findUnique({
-          where: { id: parseInt(args.id) },
-        });
-      },
-    },
-    Mutation: {
-      // Create a new user
-      createUser: async (_, args) => {
-        try {
-          const newUser = await prisma.user.create({
-            data: {
-              name: args.name,
-              email: args.email,
-            },
-          });
-          return newUser; // Make sure it returns a non-null value.
-        } catch (error) {
-          console.error('Error creating user:', error);
-          throw new Error("Failed to create user");
-        }
-      },
-      
-    //   // Update a user by ID
-    //   updateUser: async (_, args) => {
-    //     return prisma.user.update({
-    //       where: { id: parseInt(args.id) },
-    //       data: {
-    //         name: args.name,
-    //         email: args.email,
-    //       },
-    //     });
-    //   },
-    //   // Delete a user by ID
-    //   deleteUser: async (_, args) => {
-    //     return prisma.user.delete({
-    //       where: { id: parseInt(args.id) },
-    //     });
-    //   },
-    },
-  };
-  
+  Query: {
+    users: () => prisma.user.findMany(),
+    user: (_, { id }) => prisma.user.findUnique({ where: { id } }),
+    chats: () => prisma.chat.findMany(),
+    chat: (_, { id }) => prisma.chat.findUnique({ where: { id } }),
+    moves: () => prisma.move.findMany(),
+    move: (_, { id }) => prisma.move.findUnique({ where: { id } }),
+    messages: () => prisma.message.findMany(),
+    message: (_, { id }) => prisma.message.findUnique({ where: { id } }),
+  },
+  Mutation: {
+    createUser: (_, { name, email }) => prisma.user.create({ data: { name, email } }),
+    createChat: (_, { ownerId, type }) => prisma.chat.create({ data: { ownerId, type } }),
+    createMove: (_, { userId, location, time, description, chatId, type, status }) =>
+      prisma.move.create({ data: { userId, location, time, description, chatId, type, status } }),
+    createMessage: (_, { chatId, timestamp, authorId, text }) =>
+      prisma.message.create({ data: { chatId, timestamp, authorId, text } }),
+    createPreferences: (_, { userId, preference }) =>
+      prisma.preferences.create({ data: { userId, preference } }),
+  },
+  User: {
+    chats: (parent) => prisma.user.findUnique({ where: { id: parent.id } }).chats(),
+    messages: (parent) => prisma.user.findUnique({ where: { id: parent.id } }).messages(),
+  },
+  Chat: {
+    owner: (parent) => prisma.chat.findUnique({ where: { id: parent.id } }).owner(),
+    messages: (parent) => prisma.chat.findUnique({ where: { id: parent.id } }).messages(),
+    moves: (parent) => prisma.chat.findUnique({ where: { id: parent.id } }).moves(),
+  },
+  Move: {
+    user: (parent) => prisma.move.findUnique({ where: { id: parent.id } }).user(),
+    chat: (parent) => prisma.move.findUnique({ where: { id: parent.id } }).chat(),
+  },
+  Message: {
+    chat: (parent) => prisma.message.findUnique({ where: { id: parent.id } }).chat(),
+    author: (parent) => prisma.message.findUnique({ where: { id: parent.id } }).author(),
+  },
+  Preferences: {
+    user: (parent) => prisma.preferences.findUnique({ where: { id: parent.id } }).user(),
+  },
+};
+
 module.exports = resolvers;
