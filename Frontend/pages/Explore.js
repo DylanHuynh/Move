@@ -24,6 +24,7 @@ export default function Explore() {
       status: "Closed",
       title: "sf bar hopping with kids!",
       link: null,
+      moveMembers: ["Dylan", "Evan", "Caleb", "Clara", "Hallo"]
     },
     {
       moveId: 2,
@@ -36,6 +37,7 @@ export default function Explore() {
       status: "Closed",
       title: "clink with the homies!",
       link: "https://www.eventbrite.com/e/the-rocky-horror-show-tickets-726405728087?aff=ebdssbeditorialcollection",
+      moveMembers: ["Dylan", "Evan"]
     },
     {
       moveId: 3,
@@ -47,6 +49,8 @@ export default function Explore() {
       type: "private?",
       status: "Closed",
       title: "clink with the gals!",
+      link: null,
+      moveMembers: ["Dylan", "Evan", "Caleb", "Clara", "Hallo"]
     },
   ];
 
