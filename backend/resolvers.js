@@ -23,6 +23,36 @@ const resolvers = {
       prisma.message.create({ data: { chatId, authorId, text } }),
     createPreferences: (_, { userId, preference }) =>
       prisma.preferences.create({ data: { userId, preference } }),
+    addFriend: async (_, { userId, friendId }) => {
+      // Check if the user and the friend exist
+      const user = await prisma.user.findUnique({ where: { id: userId } });
+      const friend = await prisma.user.findUnique({ where: { id: friendId } });
+  
+      if (!user || !friend) {
+        throw new Error("User or friend not found");
+      }
+  
+      // Check if they are already friends
+      if (user.friendIds.includes(friendId) || friend.friendIds.includes(userId)) {
+        throw new Error("These users are already friends");
+      }
+  
+      // Update the user's friendIds list
+      const updatedUserFriendIds = [...user.friendIds, friendId];
+      await prisma.user.update({
+        where: { id: userId },
+        data: { friendIds: updatedUserFriendIds },
+      });
+  
+      // Update the friend's friendIds list
+      const updatedFriendFriendIds = [...friend.friendIds, userId];
+      await prisma.user.update({
+        where: { id: friendId },
+        data: { friendIds: updatedFriendFriendIds },
+      });
+  
+      return "Friend added successfully!";
+    },
     deleteUser: (_, { userId }) => prisma.user.delete({ where: { id: userId }, }),
     deleteUsers: (_, {}) => prisma.user.deleteMany({})
   },
