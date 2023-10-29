@@ -10,6 +10,7 @@ const typeDefs = gql`
   chats: [Chat!]!
   chat(id: Int!): Chat
   getUserMoves(userId: Int!, status: String!): [Move!]!
+  getUserMoveMembers(moveId: Int!): [User!]!
   moves: [Move!]!
   move(id: Int!): Move
   messages: [Message!]!
@@ -26,8 +27,11 @@ type Mutation {
   addFriend(userId: Int!, friendId: Int!): String!
   addFriendByEmail(userId: Int!, email: String!): String!
   updateMoveUserIds(moveId: Int!, userId: Int!): Move!
+  updateUserMoveIds(moveId: Int!, userId: Int!): User!
   deleteUser(userId: Int!): Boolean!
   deleteUsers: Boolean!
+  deleteMessage(messageId: Int!): Boolean!
+  deleteMessages: Boolean!
 }
 
 type User {
