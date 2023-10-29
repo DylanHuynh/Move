@@ -6,6 +6,7 @@ const typeDefs = gql`
   type Query {
   users: [User!]!
   user(id: Int!): User
+  getChatByUserId: Chat
   chats: [Chat!]!
   chat(id: Int!): Chat
   getUserMoves(userId: Int!, status: String!): [Move!]!

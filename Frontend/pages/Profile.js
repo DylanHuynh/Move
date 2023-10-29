@@ -14,12 +14,14 @@ import {
     useTabNavigation,
     TabsProvider
 } from 'react-native-paper-tabs';
-import { Dimensions, StyleSheet, View, Animated, Pressable, Text } from 'react-native';
+import { Dimensions, StyleSheet, View, Animated, Pressable, Text, FlatList } from 'react-native';
+
+import MoveCard from '../components/MoveCard';
 
 
 export default function Profile() {
-    const [currentMoves, setCurrentMoves] = useState([]);
-    const [pastMoves, setPastMoves] = useState([]);
+    const [currentMoves, setCurrentMoves] = useState({ getUserMoves: [] });
+    const [pastMoves, setPastMoves] = useState({ getUserMoves: [] });
     const mockProfile = {
         name: "Bob",
         friends: ["12432", "84828"],
@@ -42,9 +44,9 @@ export default function Profile() {
     }
   `;
 
-  const GET_PAST_MOVES = gql`
+    const GET_PAST_MOVES = gql`
     query {
-        getUserMoves (userid: 7, status: "past") {
+        getUserMoves (userId: 7, status: "past") {
             id
         title
         location
@@ -63,13 +65,15 @@ export default function Profile() {
     useEffect(() => {
         console.log(currentLoading);
         console.log(currentError);
-        console.log(currentData);
 
 
         if (!currentLoading && !currentError) {
+            console.log('setting current moves');
             setCurrentMoves(currentData.moves);
         }
         if (!pastLoading && !pastError) {
+            console.log('setting past moves');
+
             setPastMoves(pastData.moves);
         }
     }, [currentLoading, currentError, currentData, pastLoading, pastError, pastData]);
@@ -77,58 +81,63 @@ export default function Profile() {
     // setCurrentMoves(currentData);
     // setPastMoves(pastData);
 
+    const renderMoveCard = (item) => {
+        return <MoveCard move={item["item"]} />;
+    };
 
 
+    return (
+        <View className="flex">
+            <View className='flex-none items-center h-90 p-10'>
+                <Text className="font-bold text-4xl">{mockProfile.name}</Text>
+                <Text>{mockProfile.totalMoves}</Text>
 
-return (
-    <View className="flex">
-        <View className='flex-none items-center h-64 p-10'>
-            <Text className="font-bold text-4xl">{mockProfile.name}</Text>
-            <Text>{mockProfile.totalMoves}</Text>
-        </View>
+            </View>
 
-        <View className="flex-auto" >
-            <TabsProvider
-                defaultIndex={1}
-            // onChangeIndex={handleChangeIndex} optional
-            >
-                <Tabs
-                    // uppercase={false} // true/false | default=true (on material v2) | labels are uppercase
-                    // showTextLabel={false} // true/false | default=false (KEEP PROVIDING LABEL WE USE IT AS KEY INTERNALLY + SCREEN READERS)
-                    // iconPosition // leading, top | default=leading
-                    style={{ backgroundColor: '#fff' }} // works the same as AppBar in react-native-paper
-                // dark={false} // works the same as AppBar in react-native-paper
-                // theme={} // works the same as AppBar in react-native-paper
-                // mode="scrollable" // fixed, scrollable | default=fixed
-                // showLeadingSpace={true} //  (default=true) show leading space in scrollable tabs inside the header
-                // disableSwipe={false} // (default=false) disable swipe to left/right gestures
+            <View className=" h-full" >
+                <TabsProvider
+                    defaultIndex={1}
+                // onChangeIndex={handleChangeIndex} optional
                 >
-                    <TabScreen label="Past Moves" icon="history">
-                        <View style={{ flex: 1 }}>
-
-                        </View>
-                    </TabScreen>
-                    <TabScreen
-                        label="Current Moves"
-                        icon="bag-suitcase"
-                    // optional props
-                    // badge={true} // only show indicator
-                    // badge="text"
-                    // badge={1}
-                    // onPressIn={() => {
-                    //   console.log('onPressIn explore');
-                    // }}
-                    // onPress={() => {
-                    //   console.log('onPress explore');
-                    // }}
+                    <Tabs
+                        // uppercase={false} // true/false | default=true (on material v2) | labels are uppercase
+                        // showTextLabel={false} // true/false | default=false (KEEP PROVIDING LABEL WE USE IT AS KEY INTERNALLY + SCREEN READERS)
+                        // iconPosition // leading, top | default=leading
+                        style={{ backgroundColor: '#fff' }} // works the same as AppBar in react-native-paper
+                    // dark={false} // works the same as AppBar in react-native-paper
+                    // theme={} // works the same as AppBar in react-native-paper
+                    // mode="scrollable" // fixed, scrollable | default=fixed
+                    // showLeadingSpace={true} //  (default=true) show leading space in scrollable tabs inside the header
+                    // disableSwipe={false} // (default=false) disable swipe to left/right gestures
                     >
-                        <View style={{ backgroundColor: 'red', flex: 1 }} />
-                    </TabScreen>
-                </Tabs>
-            </TabsProvider>
+                        <TabScreen label="Past Moves" icon="history">
+                            <View style={{ flex: 1 }}>
+                                {/* <FlatList
+                                    data={pastData != undefined && pastData["getUserMoves"].length > 0 ? pastData["getUserMoves"] : []}
+                                    renderItem={renderMoveCard}
+                                    keyExtractor={(move) => move.moveId}
+                                    style={{ flex: 1, height: '100%', width: '100%', backgroundColor: "white" }}
+                                /> */}
+                            </View>
+                        </TabScreen>
+                        <TabScreen
+                            label="Current Moves"
+                            icon="bag-suitcase"
+                        >
+                            <View style={{ backgroundColor: 'red', flex: 1 }}>
+                                <FlatList
+                                    data={currentData != undefined && currentData["getUserMoves"].length > 0 ? currentData["getUserMoves"] : []}
+                                    renderItem={renderMoveCard}
+                                    keyExtractor={(move) => move.moveId}
+                                    style={{ flex: 1, height: '100%', width: '100%', backgroundColor: "white" }}
+                                />
+                            </View>
+                        </TabScreen>
+                    </Tabs>
+                </TabsProvider>
+            </View>
         </View>
-    </View>
-)
+    )
 }
 
 const styles = StyleSheet.create({

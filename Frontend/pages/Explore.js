@@ -1,9 +1,9 @@
 import React from "react";
 import { View, Text, FlatList } from "react-native";
 import { Card, Button } from "react-native-paper";
+import MoveCard from "../components/MoveCard";
 
 export default function Explore() {
-  const imgSource = { uri: "https://picsum.photos/700" };
   const moves = [
     {
       moveId: 1,
@@ -41,24 +41,7 @@ export default function Explore() {
       },
   ];
 
-  const MoveCard = (item) => {
-    const moveObj = item['move'];
-    return (
-      <View className="bg-white w-full py-4">
-        <Card>
-          <Card.Cover source={imgSource} />
-          <Card.Title title={moveObj.title} subtitle={moveObj.time} />
-          <Card.Content>
-            <Text variant="bodyMedium">{moveObj.description}</Text>
-          </Card.Content>
-          <Card.Actions>
-            <Button>cancel</Button>
-            <Button>move!</Button>
-          </Card.Actions>
-        </Card>
-      </View>
-    );
-  };
+
 
   const renderMoveCard = (item) => {
     return <MoveCard move={item["item"]}/>;
