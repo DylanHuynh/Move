@@ -8,6 +8,7 @@ import { useQuery, useMutation, gql } from '@apollo/client';
 
 
 export default function Chat({ existingChat = false }) {
+    let count = 0;
     const route = useRoute();
     // let { loading: currentLoading, error: currentError, data: chatId } = useQuery(gql`
     //     query {
@@ -92,14 +93,14 @@ export default function Chat({ existingChat = false }) {
             text: 'Hello developer',
             createdAt: new Date(),
             user: {
-                _id: 1,
+                _id: 2,
                 name: 'React Native',
                 avatar: 'https://placeimg.com/140/140/any',
             },
         },
     ])
 
-    const showModal = () => setVisible(true);
+    const showModal = () => setVisible(false);
     const hideModal = () => setVisible(false);
     const acceptMove = () => {
         hideModal()
@@ -115,6 +116,7 @@ export default function Chat({ existingChat = false }) {
     mutation CreateMessage($chatId: Int!, $authorId: Int!, $text: String!) {
         createMessage(chatId: $chatId, authorId: $authorId, text: $text) {
             text
+            id
         }
     }
 `);
@@ -123,8 +125,13 @@ export default function Chat({ existingChat = false }) {
 
         //TODO: send message to BE probably updateMessage(newMessage)
         setMessages(previousMessages =>
-            GiftedChat.append(previousMessages, messages),
+            GiftedChat.append(previousMessages, messages[messages.length - 1]),
         )
+
+        let aiResponse = "I don't know the answer!";
+
+
+        console.log("pre-reply",{messages});
 
         // AI Response
         if (error) {
@@ -142,48 +149,50 @@ export default function Chat({ existingChat = false }) {
                 .then((result) => {
                     // Handle successful response
                     console.log('Message created successfully:', result);
+                    aiResponse = result.data.createMessage.text;
+                    setMessages(previousMessages =>
+                        GiftedChat.append(previousMessages, [
+                            {
+                                _id: result.data.createMessage.id,
+                                text: aiResponse,
+                                createdAt: new Date(),
+                                user: {
+                                    _id: 0,
+                                    name: 'React Native',
+                                    avatar: 'https://placeimg.com/140/140/any',
+                                },
+                            },
+                        ]),
+                    )
                 })
                 .catch((error) => {
                     // Handle error response
                     console.error('Error creating chat:', error);
                 });
+                console.log("post-reply",{messages});
         }
 
 
-        const aiResponse = "test";
-        setMessages(previousMessages =>
-            GiftedChat.append(previousMessages, [
-                {
-                    _id: 1,
-                    text: aiResponse,
-                    createdAt: new Date(),
-                    user: {
-                        _id: 2,
-                        name: 'React Native',
-                        avatar: 'https://placeimg.com/140/140/any',
-                    },
-                },
-            ]),
-        )
+
         Keyboard.dismiss();
         showModal();
 
-    }, [])
+    }, [messages[messages.length - 1]])
 
     useEffect(() => {
         setMessages([
             {
-                _id: 1,
+                _id: -1,
                 text: 'Hello developer',
                 createdAt: new Date(),
                 user: {
-                    _id: 2,
+                    _id: 0,
                     name: 'React Native',
                     avatar: 'https://placeimg.com/140/140/any',
                 },
             },
         ])
-    }, [chat])
+    }, [])
 
     return (
         <>

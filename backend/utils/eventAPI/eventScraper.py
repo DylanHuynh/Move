@@ -40,7 +40,7 @@ async def get_events(city: str = "San Francisco", event_type: str = "", date: st
 
     results = response.json()
     events_results = results.get("events_results", [])
-    print(events_results)
+    # print(events_results)
     return events_results
     # events_dict = {}
     # for event in events_results:
@@ -49,7 +49,7 @@ async def get_events(city: str = "San Francisco", event_type: str = "", date: st
     #     time = event.get('date', {}).get('when', 'Unknown Time')
     #     location = ', '.join(event.get('address', ['Unknown Location']))
     #     description = event.get('description', 'No description available')
-        
+
     #     events_dict[title] = {
     #         'Location': location,
     #         'Date': date,

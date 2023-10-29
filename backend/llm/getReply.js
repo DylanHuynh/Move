@@ -29,6 +29,7 @@ const isolateLocation = async (userMessage) => {
 
 const getReply = async (user, userMessage) => {
   const { _, name} = user;
+  const location = "San Francisco";
   const context = await getContext(userMessage);
   const activities = await getActivities(location);
   // console.log(activities)

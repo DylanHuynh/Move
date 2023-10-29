@@ -1,1 +1,0 @@
-res.status?.error_code == 'Success'
