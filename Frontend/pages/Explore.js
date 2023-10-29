@@ -53,19 +53,12 @@ export default function Explore() {
   const renderMoveCard = (item) => {
     return <MoveCard move={item["item"]} />;
   };
-
   return (
     <View className="h-full w-full bg-background-color p-4">
       <FlatList
         data={moves}
         renderItem={renderMoveCard}
         keyExtractor={(move) => move.moveId}
-        style={{
-          flex: 1,
-          height: "100%",
-          width: "100%",
-          backgroundColor: "white",
-        }}
       />
     </View>
   );

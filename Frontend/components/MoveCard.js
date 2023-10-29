@@ -24,9 +24,9 @@ export default MoveCard = (item) => {
   };
 
   return (
-    <View className="bg-background-color w-full py-4">
+    <View className="bg-background-color w-full py-6">
       <Card className="bg-white ">
-        <Card.Cover className="rounded-b-none h-[14vh]" source={imgSource} />
+        {/* <Card.Cover className="rounded-b-none h-[14vh]" source={imgSource} /> */}
         <View className="px-2">
           <Card.Title
           className="font-bold"
