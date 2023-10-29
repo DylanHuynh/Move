@@ -36,6 +36,7 @@ model Move {
   location    String
   time        DateTime
   userId      Int
+  userIds     Int[]
   description String
   type        String
   status      String
