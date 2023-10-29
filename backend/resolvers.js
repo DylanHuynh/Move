@@ -50,7 +50,7 @@ const resolvers = {
       const updatedMoveUserIds = [move.userIds, userId];
       await prisma.move.update({
         where: { id: moveId },
-        data: { friendIds: updatedUserFriendIds },
+        data: { userIds: updatedMoveUserIds },
       })
     },
     createMessage: async (_, { chatId, authorId, text }) => {
