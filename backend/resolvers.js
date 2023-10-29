@@ -34,6 +34,20 @@ const resolvers = {
   Mutation: {
     createAIUser: (_, { }) => prisma.user.create({ data: { id: 0, name: "MoveAI", email: "" } }),
     createUser: (_, { id, name, email }) => prisma.user.create({ data: { id, name, email } }),
+    updateUserMoveIds: async (_, { moveId, userId }) => {
+      const user = await prisma.user.findUnique({ where: { id: userId } });
+
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      // Update the moves's friendIds list
+      const updatedUserMoveIds = [user.moveIds, moveId];
+      await prisma.user.update({
+        where: { id: userId },
+        data: { moves: updatedUserMoveIds },
+      })
+    },
     createChat: (_, { ownerId, type }) => prisma.chat.create({ data: { ownerId, type } }),
     createMove: async (_, { userIds, userId, location, time, description, chatId, type, status }) => {
       const title = await getMoveTitle(description);

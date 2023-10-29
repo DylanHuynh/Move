@@ -1,4 +1,4 @@
-import React, { useState, useQuery, gql } from "react";
+import React, { useState } from "react";
 import {
     View,
     FlatList,
@@ -8,7 +8,7 @@ import {
     ScrollView,
 } from "react-native";
 import { Card, Button, IconButton, Text } from "react-native-paper";
-
+import { useQuery, useMutation, gql } from '@apollo/client';
 import { useNavigation } from '@react-navigation/native';
 
 export default MoveCard = (item) => {
@@ -16,57 +16,63 @@ export default MoveCard = (item) => {
     const moveObj = item['move'];
     const [modalVisible, setModalVisible] = useState(false);
 
-    const acceptMove = () => {
-        setModalVisible(!modalVisible);
-    };
+    const [updateMoveUserIds, { moveError }] = useMutation(gql`
+    mutation UpdateMoveUserIds($moveId: Int!, $userId: Int!) {
+        updateMoveUserIds(moveId: $moveId, userId: $userId) {
+            id
+        }
+    }
+`);
+
+const [updateUserMoveIds, { userError }] = useMutation(gql`
+    mutation UpdateUserMoveIds($moveId: Int!, $userId: Int!) {
+        updateUserMoveIds(moveId: $moveId, userId: $userId) {
+            id
+        }
+    }
+`);
+
     const declineMove = () => {
         setModalVisible(!modalVisible);
     };
 
-    const saveAndGoToProfile = (moveObj) => {
-        const [createMove, { data, loading, error }] = useMutation(gql`
-            mutation CreateMove($userId: Int!, $location: String!, $time: DateTime!, $description: String!, $chatId: Int!, $type: String!, $status: String!) {
-                createMove(userId: $userId, location: $location, time: $time, description: $description, chatId: $chatId, type: $type, status: $status) {
-                    id
-                }
-            }
-        `);
+    const acceptMove = () => {
+        setModalVisible(!modalVisible);
 
-        if (!error) {
-            createMove({
+
+        if (!moveError && !userError) {
+            updateMoveUserIds({
                 variables: {
                     userId: 2,
-                    authorId: 1, //TODO: hook up userId
-                    text: messages[0].text,
+                    moveId: 1, //TODO: hook up userId
                 },
             })
                 .then((result) => {
                     // Handle successful response
-                    console.log('Message created successfully:', result);
-                    aiResponse = result.data.createMessage.text;
-                    setMessages(previousMessages =>
-                        GiftedChat.append(previousMessages, [
-                            {
-                                _id: result.data.createMessage.id,
-                                text: aiResponse,
-                                createdAt: new Date(),
-                                user: {
-                                    _id: 0,
-                                    name: 'React Native',
-                                    avatar: 'https://placeimg.com/140/140/any',
-                                },
-                            },
-                        ]),
-                    )
+                    console.log('Move updated successfully:', result);
+
                 })
                 .catch((error) => {
                     // Handle error response
-                    console.error('Error creating chat:', error);
+                    console.error('Error updating move', error);
                 });
 
+            updateUserMoveIds({
+                variables: {
+                    userId: 2,
+                    moveId: 1, //TODO: hook up userId
+                },
+            })
+                .then((result) => {
+                    // Handle successful response
+                    console.log('User updated successfully:', result);
+
+                })
+                .catch((error) => {
+                    // Handle error response
+                    console.error('Error updating user', error);
+                });
         }
-
-
         navigation.navigate('Profile');
     }
 
