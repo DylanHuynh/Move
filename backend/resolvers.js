@@ -1,6 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const { getMoveTitle } = require('./llm/getMoveTitle');
-const { getReply } = require('./llm/getReply');
+const { getLLMReply } = require('./llm/getLLMReply');
 const { insertVector } = require("./llm/vectorDB");
 
 const prisma = new PrismaClient();
@@ -54,17 +54,19 @@ const resolvers = {
       })
     },
     createMessage: async (_, { chatId, authorId, text }) => {
-      await prisma.message.create({ data: { chatId, authorId, text } });
       const userMessages = await prisma.user.findUnique({ where: { id: authorId } }).messages()
         .then((response) =>
           response.map((message) => message.text));
+
+      const user = await prisma.user.findUnique({ where: { id: authorId } })
+      const reply = await getLLMReply(user, text);
+      
+      await prisma.message.create({ data: { chatId, authorId, text } });
+      // Insert user message into vector database for future context
       if (userMessages.length % MESSAGE_CHUNK_SIZE == 0) {
         insertVector(userMessages.slice(-MESSAGE_CHUNK_SIZE).join(" "), "message");
       }
-      const user = await prisma.user.findUnique({ where: { id: authorId } })
-      console.log(user)
-      const reply = await getReply(user, text);
-      return prisma.message.create({ data: { id, chatId, authorId: LLM_AUTHOR_ID, text: reply } });
+      return prisma.message.create({ data: { chatId, authorId: LLM_AUTHOR_ID, text: reply } });
     },
     createPreferences: (_, { userId, preference }) =>
       prisma.preferences.create({ data: { userId, preference } }),
@@ -125,7 +127,9 @@ const resolvers = {
       return "Friend added successfully!";
     },
     deleteUser: (_, { userId }) => prisma.user.delete({ where: { id: userId }, }),
-    deleteUsers: (_, { }) => prisma.user.deleteMany({})
+    deleteUsers: (_, { }) => prisma.user.deleteMany({}),
+    deleteMessage: (_, { messageId }) => prisma.message.delete({ where: { id: messageId }, }) && true,
+    deleteMessages: async (_, { }) => await prisma.message.deleteMany({}) && true,
   },
   User: {
     chats: (parent) => prisma.user.findUnique({ where: { id: parent.id } }).chats(),

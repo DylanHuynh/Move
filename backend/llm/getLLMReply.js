@@ -51,21 +51,23 @@ const assembleDialogueContext = async (userName, AIName, userId, chatId) => {
 }
 
 // Use LLM to parse or prompt user for location
-const isolateLocation = async (userMessage, chatHistory) => {
+const isolateLocation = async (userMessage, chatHistory, name) => {
   // console.log(generateIsolateLocationPrompt(userMessage));
-  return postLLM(generateIsolateLocationPrompt(userMessage, chatHistory));
+  return postLLM(generateIsolateLocationPrompt(userMessage, chatHistory, name));
 }
 
 // Get reply complete with context from history, vectorDB, and scraped activities
-const getReply = async (user, userMessage, chatId) => {
-  const { _, userId, name} = user;
+const getLLMReply = async (user, userMessage, chatId) => {
+  const { _, id: userId, name: userName} = user;
 
-  const chatHistory = await assembleDialogueContext(name, "MoveAI", userId, chatId);
-  const locationDict = await isolateLocation(userMessage, chatHistory);
+  const chatHistory = await assembleDialogueContext(userName, "MoveAI", userId, chatId);
+  const locationDict = await isolateLocation(userMessage, chatHistory, userName);
+
+  let request, location;
 
   // If a location cannot be parsed from userMessage, return a request for a location
   try {
-    const {request, location} = JSON.parse(locationDict);
+    ({request, location} = JSON.parse(locationDict));
   } catch (error) {
     return locationDict;
   }
@@ -73,18 +75,24 @@ const getReply = async (user, userMessage, chatId) => {
   // context strings from different sources, separated by \n
   const context = await getContext(userMessage);
   const activities = await getActivities(location);
-  console.log(activities);
   
-  return postLLM(generateReplyPrompt(activities, context, request, name));
+  const LLMOutput = postLLM(generateReplyPrompt(activities, context, chatHistory, userName, request));
+
+  let moveDict;
+  try {
+    return JSON.parse(LLMOutput);
+  } catch (error) {
+    return LLMOutput;
+  }
 };
 
 (async () => {
-  console.log(await assembleDialogueContext("Input", "Output", 4, 2));
-  // console.log(await getReply({name: "Evan"}, "What should my friend and I do this weekend?"));
+  // console.log(await assembleDialogueContext("Input", "Output", 2, 2));
+  // console.log(await getLLMReply({name: "Evan"}, "What should my friend and I do this weekend?"));
   // console.log(await postTogetherAI());
   // const chatHistory = await assembleDialogueContext("Evan", "MoveAI", 4, 2);
   // console.log(chatHistory);
   // console.log(await isolateLocation("It's friday... what\\'s the move?", chatHistory));
 })()
 
-module.exports = { getReply };
+module.exports = { getLLMReply };
