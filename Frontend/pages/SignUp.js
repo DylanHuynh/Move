@@ -3,39 +3,43 @@ import { StyleSheet, View } from "react-native";
 import { Text, TextInput, Button } from "react-native-paper";
 import {
   getAuth,
-  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithCredential,
 } from "firebase/auth";
 import { useNavigation } from "@react-navigation/native";
 
-export default function SignIn() {
+export default function SignUp() {
   const navigation = useNavigation();
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const auth = getAuth();
-  const [warningMessage, setWarningMessage] = useState(false);
-
-  const signInWithCredentials = () =>
-    signInWithEmailAndPassword(auth, email, password)
+  const [warningMessage, setWarningMessage] = useState("");
+  const signUpWithCredentials = () =>
+    createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed up
         const user = userCredential.user;
-        navigation.navigate("Tab Screen");
+        navigation.navigate("About You");
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        setWarningMessage(true);
+        setWarningMessage(errorCode);
+        console.log(errorCode);
       });
 
   return (
     <View style={styles.container}>
-      <Text variant="displaySmall">let's move</Text>
-      {warningMessage == true ? (
-        <Text color="red">
-          whoops! that's not right. let's move on together and try again
+      <Text variant="displaySmall">join the move</Text>
+      {warningMessage == "auth/weak-password" ? (
+        <Text textColor="red">
+          make sure your password is over 6 characters. keep your account safe!
         </Text>
+      ) : warningMessage == "auth/invalid-email" ? (
+        <Text textColor="red">invalid email. tough</Text>
+      ) : warningMessage == "auth/email-already-in-use" ? (
+        <Text textColor="red">email already in use. log in to get moving</Text>
       ) : null}
       <TextInput
         label="email"
@@ -57,16 +61,16 @@ export default function SignIn() {
         <Button
           textColor="black"
           style={{ backgroundColor: "#FFD978" }}
-          onPress={signInWithCredentials}
+          onPress={signUpWithCredentials}
           mode="contained"
         >
-          log in
+          sign up
         </Button>
         <Button
           textColor="black"
-          onPress={() => navigation.navigate("Sign Up")}
+          onPress={() => navigation.navigate("Sign In")}
         >
-          new user? sign up here
+          already a user? log in here!
         </Button>
       </View>
     </View>

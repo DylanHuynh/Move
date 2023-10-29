@@ -2,64 +2,50 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import AboutYou from "./pages/AboutYou";
-import Chat from "./pages/Chat";
-import Profile from "./pages/Profile";
-import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
 import Onboarding from "./pages/Onboarding";
-import Explore from "./pages/Explore";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { NavigationContainer } from '@react-navigation/native';
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import { NavigationContainer} from "@react-navigation/native";
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 
-import { StatusBar } from 'expo-status-bar';
-import { AppRegistry, StyleSheet, View } from 'react-native';
-import { PaperProvider } from 'react-native-paper'
+import { AppRegistry, StyleSheet, View } from "react-native";
+import { PaperProvider, MD3LightTheme as DefaultTheme } from "react-native-paper";
+import TabScreen from "./TabScreens";
+import SignIn from "./pages/SignIn";
 
-
-const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 // Initialize Apollo Client
 const client = new ApolloClient({
-  uri: 'http://localhost:4001/graphql',
-  cache: new InMemoryCache()
+  uri: "http://localhost:4001/graphql",
+  cache: new InMemoryCache(),
 });
 
-export default function App() {
-  const signedIn = true;
+const MyTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: "#FFD978",
+    background: "#F8F5EE",
+  },
+};
 
+export default function App() {
   return (
     <ApolloProvider client={client}>
-    <PaperProvider>
-      <NavigationContainer>
-        {signedIn ? (
-          <Tab.Navigator>
-            <Tab.Screen name="About You" component={AboutYou} />
-            <Tab.Screen name="Chat" component={Chat} />
-            <Tab.Screen name="Profile" component={Profile} />
-            <Tab.Screen name="Explore" component={Explore} />
-          </Tab.Navigator>
-        ) : (
-          <Stack.Navigator>
+      <PaperProvider theme={MyTheme}>
+        <NavigationContainer theme={MyTheme}>
+          <Stack.Navigator screenOptions={{ gestureEnabled: false }}>
             <Stack.Screen name="Sign In" component={SignIn} />
+            <Stack.Screen name="Sign Up" component={SignUp} options={{headerShown: false}}/>
             <Stack.Screen name="About You" component={AboutYou} />
             <Stack.Screen name="Onboarding" component={Onboarding} />
+            <Stack.Screen name="Tab Screen" component={TabScreen} />
           </Stack.Navigator>
-        )}
-      </NavigationContainer>
-    </PaperProvider>
+        </NavigationContainer>
+      </PaperProvider>
     </ApolloProvider>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
-
-
-AppRegistry.registerComponent('Move', () => App);
+AppRegistry.registerComponent("Move", () => App);

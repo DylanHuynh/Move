@@ -15,6 +15,8 @@ import {
   GoogleAuthProvider,
 } from "firebase/auth";
 import { initializeApp } from "firebase/app";
+import { useNavigation } from '@react-navigation/native';
+
 
 
 // GoogleSignin.configure({
@@ -23,6 +25,8 @@ import { initializeApp } from "firebase/app";
 // })
 
 export default function Onboarding() {
+    const navigation = useNavigation();
+
     const preferences = [
         "being active",
         "meeting new people",
@@ -51,12 +55,14 @@ export default function Onboarding() {
         <View style={styles.container}>
             <Text variant="displaySmall">what's the move</Text>
             <Text variant="bodyMedium">for us to personalize your friday night recommendations</Text>
+            <View className="gap-y-5 items-center">
             {preferences.map((pref, index) => {
                 return (
-                    <Button key={index} mode={selectedPreferences.includes(index) ? "contained" : "contained-tonal"} textColor="black" onPress={() => updateSelectedPreferences(index)}>{pref}</Button>
+                    <Button className="w-full" key={index} mode={selectedPreferences.includes(index) ? "contained-tonal" : "elevated"} style={{backgroundColor: selectedPreferences.includes(index) ? "#FDF0B0" : "#fff" }} textColor="black" onPress={() => updateSelectedPreferences(index)}>{pref}</Button>
                 )
             })}
-            <Button onPress={() => console.log("hello")} mode="contained" className="bg-primary-color">let's move</Button>
+            <Button className="bg-primary-color w-fit" onPress={() => navigation.navigate("Tab Screen") } mode="contained" textColor="black">let's move</Button>
+            </View>
         </View>
     );
 }

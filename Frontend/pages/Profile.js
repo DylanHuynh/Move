@@ -83,7 +83,7 @@ export default function Profile() {
 
 return (
     <View className="flex">
-        <View className='flex-none items-center h-64 p-10'>
+        <View className='flex-none items-center h-40 p-10'>
             <Text className="font-bold text-4xl">{mockProfile.name}</Text>
             <Text>{mockProfile.totalMoves}</Text>
         </View>
