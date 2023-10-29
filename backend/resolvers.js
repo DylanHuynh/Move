@@ -85,7 +85,7 @@ const resolvers = {
     },
     createPreferences: async (_, { userId, alcohol }) => {
       const preferences = await prisma.preferences.create({ data: { userId, alcohol } });
-      insertVector(userId, `I'm ${alcohol ?? "" : 'not'} okay with alcohol.`, "preference");
+      insertVector(userId, `I'm ${alcohol ? "" : 'not'} okay with alcohol.`, "preference");
       return preferences;
     },
     addFriend: async (_, { userId, friendId }) => {
