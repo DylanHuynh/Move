@@ -116,10 +116,12 @@ const queryVector = async (userId, text) => {
     limit: 10,
     consistency_level: ConsistencyLevelEnum.Strong,
   });
-  milvusClient.closeConnection();
-  if (res.status.error_code == 'Success')
-    return res.results.map((result) => result.text).join("\n");
-  return ""
+  if (res.status.error_code == 'Success'){
+    const out = res.results.map((result) => result.text).join("\n");
+    milvusClient.closeConnection();
+    return out;
+  }
+  return "Failed"
 }
 
 module.exports = { getClient, queryVector, initVectorDB, insertVector, wipeVectorDB };

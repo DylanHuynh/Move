@@ -7,41 +7,18 @@ const { formatDialogue } = require('../utils/stringUtils');
 const { getLastTenMessagesByUserInChat } = require('../utils/prismaUtils');
 const axios = require('axios')
 
-const ENDPOINT = process.env.TOGETHER_ENDPOINT_URL;
-const API_TOKEN = process.env.TOGETHER_API_TOKEN;
-const MODEL = "garage-bAInd/Platypus2-70B-instruct"
-const MODEL_PROMPT = (p) => `### Instruction:\n${p}\n### Response:\n`
 const CHAT_HISTORY_MEMORY = 10;
+const OpenAI =  require('openai');
+const openai = new OpenAI({
+  apiKey: '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'
+});
 
 const postLLM = async (prompt) => {
-  console.log(MODEL_PROMPT(prompt))
-  return axios.post(ENDPOINT, {
-    "model": "garage-bAInd/Platypus2-70B-instruct",
-    "max_tokens": 512,
-    "prompt": MODEL_PROMPT(prompt),
-    "request_type": "language-model-inference",
-    "temperature": 0.7,
-    "top_p": 0.7,
-    "top_k": 50,
-    "repetition_penalty": 1,
-    "stop": [
-      "</s>",
-      "###"
-    ],
-    "negative_prompt": "",
-    "sessionKey": "d1c09dfae5b24b6604874acdc39e21a9129d306d",
-    "safety_model": "",
-    "repetitive_penalty": 1,
-    "update_at": "2023-10-29T06:06:06.970Z"
-  }, {
-    headers: {
-      Authorization: 'Bearer ' + API_TOKEN
-    }    
-  }).then((response) => {
-    return response.data.output.choices[0].text
-  }, (error) => {
-    console.log(error);
+  const chatCompletion = await openai.chat.completions.create({
+    messages: [{ role: 'user', content: prompt}],
+    model: 'gpt-3.5-turbo',
   });
+  return chatCompletion.choices[0].message.content;
 }
 
 const assembleDialogueContext = async (userName, AIName, userId, chatId) => {
@@ -64,8 +41,10 @@ const getLLMReply = async (user, userMessage, chatId) => {
 
   // context strings from different sources, separated by \n
   const context = await getContext(userId, userMessage);
+
   const LLMOutput = await postLLM(generateReplyPrompt(context, chatHistory, userName, userMessage));
   if (LLMOutput == "getActivities") {
+    console.log("Researching activities")
     let request, location;
     const locationOutput = await isolateLocation(userMessage, chatHistory, userName);
 
@@ -83,11 +62,12 @@ const getLLMReply = async (user, userMessage, chatId) => {
 
 (async () => {
   // console.log(await assembleDialogueContext("Input", "Output", 2, 2));
-  // console.log(await getLLMReply({name: "Evan"}, "What should my friend and I do this weekend?"));
+  console.log(await getLLMReply({name: "Evan", id: 2}, "What should my friend and I do this weekend?", 2));
   // console.log(await postTogetherAI());
   // const chatHistory = await assembleDialogueContext("Evan", "MoveAI", 4, 2);
   // console.log(chatHistory);
   // console.log(await isolateLocation("It's friday... what\\'s the move?", chatHistory));
+  // console.log(await getContext(2, "hello"))
 })()
 
 module.exports = { getLLMReply };
