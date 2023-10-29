@@ -16,6 +16,9 @@ import MoveCard from '../components/MoveCard';
 export default function Profile() {
     const [currentMoves, setCurrentMoves] = useState({ getUserMoves: [] });
     const [pastMoves, setPastMoves] = useState({ getUserMoves: [] });
+    const [email, setEmail] = useState('');
+    const [isSearchBarVisible, setSearchBarVisible] = useState(false);
+
     const mockProfile = {
         name: "Bob",
         friends: ["12432", "84828"],

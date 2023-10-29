@@ -1,9 +1,10 @@
-import React, { useState, useCallback, useEffect, useQuery, useMutation, gql } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Modal, Portal, Button, IconButton } from 'react-native-paper';
 import { StyleSheet, Text, View, Keyboard } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat'
 import { useRoute } from '@react-navigation/native';
+import { useQuery, useMutation, gql } from '@apollo/client';
 
 
 export default function Chat({ existingChat = false }) {
@@ -23,7 +24,7 @@ export default function Chat({ existingChat = false }) {
     //     }
     // `)
     let chatId = 3;
-    if (route.params.id) {
+    if (route && route.params && route.params.id) {
         chatId = route.params.id; //WILL REPLACE WITH GRABBED ID FROM FIREBASE
     }
 
@@ -108,7 +109,15 @@ export default function Chat({ existingChat = false }) {
     }
     const containerStyle = { backgroundColor: 'white', height: '40%', width: '100%', borderTopLeftRadius: '20%', borderTopRightRadius: '20%' };
 
+    console.log("about to use mutation!!!")
     // // GOOGLE API KEY FUNCTIONS
+    const [createMessage, { data, loading, error }] = useMutation(gql`
+    mutation CreateMessage($chatId: Int!, $authorId: Int!, $text: String!) {
+        createMessage(chatId: $chatId, authorId: $authorId, text: $text) {
+            text
+        }
+    }
+`);
 
     const onSend = useCallback((messages = []) => {
 
@@ -116,7 +125,32 @@ export default function Chat({ existingChat = false }) {
         setMessages(previousMessages =>
             GiftedChat.append(previousMessages, messages),
         )
-        const aiResponse = "responding!";
+
+        // AI Response
+        if (error) {
+            console.log('Error', error.message);
+        } else {
+            console.log(loading);
+            console.log("MESSAGE: ", messages[0].text)
+            createMessage({
+                variables: {
+                    chatId: 2,
+                    authorId: 1, //TODO: hook up userId
+                    text: messages[0].text,
+                },
+            })
+                .then((result) => {
+                    // Handle successful response
+                    console.log('Message created successfully:', result);
+                })
+                .catch((error) => {
+                    // Handle error response
+                    console.error('Error creating chat:', error);
+                });
+        }
+
+
+        const aiResponse = "test";
         setMessages(previousMessages =>
             GiftedChat.append(previousMessages, [
                 {
