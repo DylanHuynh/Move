@@ -40,7 +40,7 @@ export default function AboutYou() {
             <TextInput
               label="name"
               value={name}
-              onChange={(n) => setName(n)}
+              onChangeText={(n) => setName(n)}
               mode={'contained-tonal'}
               className="bg-background-color"
             />

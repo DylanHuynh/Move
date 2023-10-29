@@ -35,18 +35,11 @@ export default function Explore() {
 
   useEffect(() => {
     if (!currentLoading && currentData) {
+      console.log(currentData)
       setCurrentMoves(currentData.moves);
     }
 
   }, [currentLoading, currentData]);
-
-  const moves = []
-  for (const move of currentMoves) {
-    moves.push({
-      moveId: move["id"],
-      location: move["location"]
-    })
-  }
 
   // const moves = [
   //   {
@@ -97,10 +90,17 @@ export default function Explore() {
   const renderMoveCard = (item) => {
     return <MoveCard move={item["item"]} page="explore"/>;
   };
+
   return (
     <View className="h-full w-full bg-background-color p-4">
       <FlatList
-        data={moves}
+        data={currentMoves.map((move) => { return {
+          moveId: move["id"],
+          location: move["location"],
+          description: move["description"],
+          time: move["time"],
+          title: move["title"],
+        }})}
         renderItem={renderMoveCard}
         keyExtractor={(move) => move.moveId}
       />

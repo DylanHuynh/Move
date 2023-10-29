@@ -65,6 +65,21 @@ export default function Onboarding() {
             }
         `);
 
+    function stringToHash(string) {
+
+        let hash = 0;
+
+        if (string.length == 0) return hash;
+
+        for (i = 0; i < string.length; i++) {
+            char = string.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash;
+        }
+
+        return hash;
+    }
+
     const handleSubmit = () => {
         if (user !== null) {
             // The user object has basic properties such as display name, email, etc.
@@ -74,24 +89,27 @@ export default function Onboarding() {
             // this value to authenticate with your backend server, if
             // you have one. Use User.getToken() instead.
             const uid = user.uid;
+            console.log({ email, uid })
+            console.log(stringToHash(uid));
             createUser({
                 variables: {
-                    id: uid,
+                    id: stringToHash(uid),
                     name: route.params.name, //TODO: hook up userId
                     email,
                 },
             })
                 .then((result) => {
                     // Handle successful response
-                    console.log('Message created successfully:', result);
+                    console.log('User created successfully:', result);
 
                 })
                 .catch((error) => {
                     // Handle error response
-                    console.error('Error creating chat:', error);
+                    console.error('Error creating user:', error);
                 });
+            navigation.navigate("Tab Screen");
         }
-        navigation.navigate("Tab Screen");
+
     }
 
 

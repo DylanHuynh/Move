@@ -36,8 +36,8 @@ export default function App() {
       <PaperProvider theme={MyTheme}>
         <NavigationContainer theme={MyTheme}>
           <Stack.Navigator screenOptions={{ gestureEnabled: false }}>
-            {/* <Stack.Screen name="Sign In" component={SignIn} /> */}
-            {/* <Stack.Screen name="Sign Up" component={SignUp} options={{headerShown: false}}/> */}
+            <Stack.Screen name="Sign In" component={SignIn} />
+            <Stack.Screen name="Sign Up" component={SignUp} options={{headerShown: false}}/>
             <Stack.Screen name="About You" component={AboutYou} />
             <Stack.Screen name="Onboarding" component={Onboarding} />
             <Stack.Screen name="Tab Screen" component={TabScreen} options={{headerShown: false}} />

@@ -10,11 +10,15 @@ import {
 import { Card, Button, IconButton, Text, Avatar } from "react-native-paper";
 import { useQuery, useMutation, gql } from '@apollo/client';
 import { useNavigation } from '@react-navigation/native';
+import {
+    getAuth,
+} from "firebase/auth"
 
 export default MoveCard = ({ move, page }) => {
     const navigation = useNavigation();
     const imgSource = { uri: "https://picsum.photos/700" };
     const moveObj = move;
+
     const [modalVisible, setModalVisible] = useState(false);
 
     const [updateMoveUserIds, { moveError }] = useMutation(gql`
@@ -42,6 +46,7 @@ export default MoveCard = ({ move, page }) => {
 
     useEffect(() => {
         if (!currentLoading && currentData) {
+            console.log({currentData})
             setCurrentMoves(currentData.getUserMoveMembers);
         }
 
@@ -58,10 +63,14 @@ export default MoveCard = ({ move, page }) => {
 
 
         if (!moveError && !userError) {
+
+            const auth = getAuth();
+            const uid = auth.currentUser ? auth.currentUser.uid : -1;
+
             updateMoveUserIds({
                 variables: {
-                    userId: 2,
-                    moveId: 1, //TODO: hook up userId
+                    userId: uid,
+                    moveId: move.id, //TODO: hook up userId
                 },
             })
                 .then((result) => {
@@ -76,8 +85,8 @@ export default MoveCard = ({ move, page }) => {
 
             updateUserMoveIds({
                 variables: {
-                    userId: 2,
-                    moveId: 1, //TODO: hook up userId
+                    userId: uid,
+                    moveId: move.id, //TODO: hook up userId
                 },
             })
                 .then((result) => {
