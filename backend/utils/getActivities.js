@@ -7,4 +7,6 @@ const getActivities = (location) => fetch(`http://127.0.0.1:8000/get-events/?cit
     return result;
   });
 
+// (async ()=> console.log(await getActivities("San Francisco")))()
+
 module.exports = {getActivities};

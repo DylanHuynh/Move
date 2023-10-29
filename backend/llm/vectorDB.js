@@ -76,6 +76,20 @@ const initVectorDB = async () => {
   console.log('Database is created', createCollection);
 };
 
+const seedDB = async () => { 
+  await wipeVectorDB();
+  await initVectorDB();
+
+  await insertVector(1, "i like drinking alcohol", "message");
+  await insertVector(1, "my friend ron can't drink any vodka.", "message");
+  await insertVector(1, "i love dogs!!", "message");
+  await insertVector(1, "i want to go to a zoo.", "message");
+
+  for (let i = 0; i < 10; i++) {
+    
+  }
+}
+
 const insertVector = async (userId, text, context_type) => {
   const milvusClient = getClient();
 
