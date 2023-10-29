@@ -18,7 +18,7 @@ const Tab = createBottomTabNavigator();
 
 // Initialize Apollo Client
 const client = new ApolloClient({
-  uri: 'https://3701-2600-387-f-6110-00-b.ngrok.io/graphql',
+  uri: 'https://37c7-2600-387-f-571a-00-1.ngrok.io/graphql',
   cache: new InMemoryCache()
 });
 

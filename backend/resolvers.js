@@ -53,6 +53,32 @@ const resolvers = {
   
       return "Friend added successfully!";
     },
+    addFriendByEmail: async (_, { userId, email }) => {
+      const user = await prisma.user.findUnique({ where: { id: userId } });
+      const friend = await prisma.user.findUnique({ where: { email: email } });
+  
+      if (!user || !friend) {
+        throw new Error("User or friend not found");
+      }
+  
+      if (user.friendIds.includes(friend.id) || friend.friendIds.includes(user.id)) {
+        throw new Error("These users are already friends");
+      }
+  
+      const updatedUserFriendIds = [...user.friendIds, friend.id];
+      await prisma.user.update({
+        where: { id: userId },
+        data: { friendIds: updatedUserFriendIds },
+      });
+  
+      const updatedFriendFriendIds = [...friend.friendIds, userId];
+      await prisma.user.update({
+        where: { id: friend.id },
+        data: { friendIds: updatedFriendFriendIds },
+      });
+  
+      return "Friend added successfully!";
+    },
     deleteUser: (_, { userId }) => prisma.user.delete({ where: { id: userId }, }),
     deleteUsers: (_, {}) => prisma.user.deleteMany({})
   },

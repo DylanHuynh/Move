@@ -21,6 +21,7 @@ type Mutation {
   createMessage(chatId: Int!, timestamp: DateTime!, authorId: Int!, text: String!): Message!
   createPreferences(userId: Int!, preference: String!): Preferences!
   addFriend(userId: Int!, friendId: Int!): String!
+  addFriendByEmail(userId: Int!, email: String!): String!
   deleteUser(userId: Int!): Boolean!
   deleteUsers: Boolean!
 }
