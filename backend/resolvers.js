@@ -34,6 +34,7 @@ const resolvers = {
         insertVector(userMessages.slice(-MESSAGE_CHUNK_SIZE).join(" "), "message");
       }
       const user = await prisma.user.findUnique({ where: { id: authorId } })
+      console.log(user)
       const reply = await getReply(user, text);
       return prisma.message.create({ data: { chatId, authorId: LLM_AUTHOR_ID, text: reply } });
     },
