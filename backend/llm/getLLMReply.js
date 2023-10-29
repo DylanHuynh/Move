@@ -1,6 +1,6 @@
 fetch = require("node-fetch");
 require('dotenv').config();
-const { generateReplyPrompt, generateIsolateLocationPrompt } = require('./prompts');
+const { generateReplyPrompt, generateIsolateLocationPrompt, generateReplyPromptWithActivities } = require('./prompts');
 const { getContext } = require('./getContext');
 const { getActivities } = require('../utils/getActivities');
 const { formatDialogue } = require('../utils/stringUtils');
@@ -61,29 +61,24 @@ const getLLMReply = async (user, userMessage, chatId) => {
   const { _, id: userId, name: userName} = user;
 
   const chatHistory = await assembleDialogueContext(userName, "MoveAI", userId, chatId);
-  const locationDict = await isolateLocation(userMessage, chatHistory, userName);
-
-  let request, location;
-
-  // If a location cannot be parsed from userMessage, return a request for a location
-  try {
-    ({request, location} = JSON.parse(locationDict));
-  } catch (error) {
-    return locationDict;
-  }
 
   // context strings from different sources, separated by \n
-  const context = await getContext(userMessage);
-  const activities = await getActivities(location);
-  
-  const LLMOutput = postLLM(generateReplyPrompt(activities, context, chatHistory, userName, request));
+  const context = await getContext(userId, userMessage);
+  const LLMOutput = await postLLM(generateReplyPrompt(context, chatHistory, userName, userMessage));
+  if (LLMOutput == "getActivities") {
+    let request, location;
+    const locationOutput = await isolateLocation(userMessage, chatHistory, userName);
 
-  let moveDict;
-  try {
-    return JSON.parse(LLMOutput);
-  } catch (error) {
-    return LLMOutput;
+    // If a location cannot be parsed from userMessage, return a request for a location
+    try {
+      ({request, location} = JSON.parse(locationOutput));
+    } catch (error) {
+      return locationOutput;
+    }
+    const activities = await getActivities(location);
+    return postLLM(generateReplyPromptWithActivities(activities, context, chatHistory, userName, request));
   }
+  return LLMOutput;
 };
 
 (async () => {
