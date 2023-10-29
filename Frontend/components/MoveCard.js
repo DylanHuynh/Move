@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useQuery, gql } from "@apollo/client";
 import {
     View,
     FlatList,
@@ -13,6 +12,7 @@ import { useQuery, useMutation, gql } from '@apollo/client';
 import { useNavigation } from '@react-navigation/native';
 
 export default MoveCard = (item) => {
+    const navigation = useNavigation();
     const imgSource = { uri: "https://picsum.photos/700" };
     const moveObj = item["move"];
     const [modalVisible, setModalVisible] = useState(false);

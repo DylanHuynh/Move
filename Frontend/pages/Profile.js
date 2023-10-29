@@ -1,34 +1,14 @@
-<<<<<<< HEAD
 import React, { useState, useEffect } from "react";
 import { useQuery, useMutation, gql } from "@apollo/client";
 import { Button, TextInput, Text, Avatar } from "react-native-paper";
 import { Tabs, TabScreen, TabsProvider } from "react-native-paper-tabs";
-import { StyleSheet, View, Pressable, Modal } from "react-native";
+import { StyleSheet, View, Pressable, FlatList, Modal } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-
-const GET_CURRENT_MOVES = gql`
-  query {
-    getUserMoves(userId: 7, status: "active") {
-      id
-      title
-      location
-      time
-      userId
-      description
-      chatId
-      type
-      status
-=======
-import React, { useState, useEffect } from 'react';
-import { useQuery, useMutation, gql } from '@apollo/client';
-import { Button, TextInput, Text } from 'react-native-paper';
-import { Tabs, TabScreen, TabsProvider } from 'react-native-paper-tabs';
-import { StyleSheet, View, Pressable, FlatList } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { useNavigation } from '@react-navigation/native';
 
 const GET_CURRENT_MOVES = gql`
     query {
-      getUserMoves (userId: 1, status: "active") {
+      getUserMoves(userId: 1, status: "active") {
         id
         title
         location
@@ -39,27 +19,12 @@ const GET_CURRENT_MOVES = gql`
         type
         status
       }
->>>>>>> 8229508b9fa1b57c793ae23adeb956a140048728
     }
-  }
 `;
 
 const GET_PAST_MOVES = gql`
-<<<<<<< HEAD
-  query {
-    getUserMoves(userId: 7, status: "past") {
-      id
-      title
-      location
-      time
-      userId
-      description
-      chatId
-      type
-      status
-=======
     query {
-        getUserMoves (userId: 1, status: "past") {
+        getUserMoves(userId: 1, status: "past") {
             id
             title
             location
@@ -70,13 +35,11 @@ const GET_PAST_MOVES = gql`
             type
             status
         }
->>>>>>> 8229508b9fa1b57c793ae23adeb956a140048728
     }
-  }
 `;
 
 export default function Profile() {
-<<<<<<< HEAD
+  const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const [currentMoves, setCurrentMoves] = useState([]);
   const [pastMoves, setPastMoves] = useState([]);
@@ -87,38 +50,17 @@ export default function Profile() {
       addFriendByEmail(userId: $userId, email: $email)
     }
   `);
-=======
-    const [currentMoves, setCurrentMoves] = useState([]);
-    const [pastMoves, setPastMoves] = useState([]);
-    const [email, setEmail] = useState('');
-    const [isSearchBarVisible, setSearchBarVisible] = useState(false);
-    const [addFriendByEmail] = useMutation(gql`
-        mutation AddFriendByEmail($userId: Int!, $email: String!) {
-            addFriendByEmail(userId: $userId, email: $email)
-        }
-    `)
-
-
-    const mockProfile = {
-        id: 2,
-        name: "Bob",
-        totalMoves: 3,
-    }
-
-    const profile = mockProfile;
->>>>>>> 8229508b9fa1b57c793ae23adeb956a140048728
 
   const mockProfile = {
     id: 2,
     name: "Bob",
     totalMoves: 32,
     totalFriends: 90,
-    motion: 20
+    motion: 20,
   };
 
   const profile = mockProfile;
 
-<<<<<<< HEAD
   const addFriend = () => {
     setModalVisible(!modalVisible);
     addFriendByEmail({
@@ -149,79 +91,20 @@ export default function Profile() {
       setPastMoves(pastData.getUserMoves);
     }
   }, [currentLoading, currentData, pastLoading, pastData]);
-  const [text, setText] = useState("")
+  const [text, setText] = useState("");
+
+  const renderMoveCard = (item) => {
+    return <MoveCard move={item["item"]} />;
+  };
   return (
     <View style={styles.container}>
       <View className="p-8 items-center justify-between h-2/5">
         <View className="flex flex-row-reverse w-full m-3">
           <View className="flex flex-end">
-            <Pressable
-              onPress={() => setModalVisible(true)}
-            >
+            <Pressable onPress={() => setModalVisible(true)}>
               <Icon name="user-plus" size={24} color="black" />
             </Pressable>
           </View>
-=======
-    const renderMoveCard = (item) => {
-        return <MoveCard move={item["item"]} />;
-    };
-
-    return (
-        <View style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.name}>{profile.name}</Text>
-                <Text style={styles.totalMoves}>{profile.totalMoves} Moves</Text>
-                <Pressable onPress={() => setSearchBarVisible(!isSearchBarVisible)} style={styles.addFriendIcon}>
-                    <Icon name="user-plus" size={24} color="black" />
-                </Pressable>
-            </View>
-            {isSearchBarVisible && (
-                <View style={styles.searchBar}>
-                    <TextInput
-                        placeholder="Enter friend's email"
-                        value={email}
-                        onChangeText={setEmail}
-                        style={styles.textInput}
-                    />
-                    <Button onPress={() => {
-                        addFriendByEmail({
-                            variables: {
-                                userId: 1,
-                                email
-                            }
-                        })
-                        setEmail('')
-                    }
-                    } style={styles.addButton}>Add Friend</Button>
-                </View>
-            )}
-            <View className="h-full">
-                <TabsProvider defaultIndex={1} style={styles.tabsProvider}>
-                    <Tabs style={styles.tabs}>
-                        <TabScreen label="Past Moves" icon="history">
-                            <View style={styles.tabContent}>
-                                <FlatList
-                                    data={pastData != undefined && pastData["getUserMoves"].length > 0 ? pastData["getUserMoves"] : []}
-                                    renderItem={renderMoveCard}
-                                    keyExtractor={(move) => move.moveId}
-                                    style={{ flex: 1, height: '100%', width: '100%', backgroundColor: "white" }}
-                                />
-                            </View>
-                        </TabScreen>
-                        <TabScreen label="Current Moves" icon="bag-suitcase">
-                            <View style={styles.tabContent}>
-                                <FlatList
-                                    data={currentData != undefined && currentData["getUserMoves"].length > 0 ? currentData["getUserMoves"] : []}
-                                    renderItem={renderMoveCard}
-                                    keyExtractor={(move) => move.moveId}
-                                    style={{ flex: 1, height: '100%', width: '100%', backgroundColor: "white" }}
-                                />
-                            </View>
-                        </TabScreen>
-                    </Tabs>
-                </TabsProvider>
-            </View>
->>>>>>> 8229508b9fa1b57c793ae23adeb956a140048728
         </View>
 
         <Avatar.Text size={56} label={profile.name[0]} />
@@ -279,7 +162,7 @@ export default function Profile() {
                     textColor="white"
                     onPress={() => {
                       if (email.length != 0) {
-                         addFriend();
+                        addFriend();
                       }
                     }}
                     style={styles.addButton}
@@ -301,45 +184,52 @@ export default function Profile() {
           </Modal>
         </View>
       </View>
-      {isSearchBarVisible && (
-        <View style={styles.searchBar}>
-          <TextInput
-            placeholder="Enter friend's email"
-            value={email}
-            onChangeText={setEmail}
-            style={styles.textInput}
-          />
-          <Button
-            onPress={() => {
-              addFriendByEmail({
-                variables: {
-                  userId: 1,
-                  email,
-                },
-              });
-              setEmail("");
-            }}
-            style={styles.addButton}
-          >
-            Add Friend
-          </Button>
-        </View>
-      )}
 
-      <TabsProvider defaultIndex={1} style={styles.tabsProvider}>
-        <Tabs style={styles.tabs}>
-          <TabScreen label="Past Moves" icon="history">
-            <View style={styles.tabContent}>
-              {/* Render your past moves here */}
-            </View>
-          </TabScreen>
-          <TabScreen label="Current Moves" icon="satellite-uplink">
-            <View style={styles.tabContent}>
-              {/* Render your current moves here */}
-            </View>
-          </TabScreen>
-        </Tabs>
-      </TabsProvider>
+      <View className="h-full">
+        <TabsProvider defaultIndex={1} style={styles.tabsProvider}>
+          <Tabs style={styles.tabs}>
+            <TabScreen label="Past Moves" icon="history">
+              <View style={styles.tabContent}>
+                <FlatList
+                  data={
+                    pastData != undefined && pastData["getUserMoves"].length > 0
+                      ? pastData["getUserMoves"]
+                      : []
+                  }
+                  renderItem={renderMoveCard}
+                  keyExtractor={(move) => move.moveId}
+                  style={{
+                    flex: 1,
+                    height: "100%",
+                    width: "100%",
+                    backgroundColor: "white",
+                  }}
+                />
+              </View>
+            </TabScreen>
+            <TabScreen label="Current Moves" icon="bag-suitcase">
+              <View style={styles.tabContent}>
+                <FlatList
+                  data={
+                    currentData != undefined &&
+                    currentData["getUserMoves"].length > 0
+                      ? currentData["getUserMoves"]
+                      : []
+                  }
+                  renderItem={renderMoveCard}
+                  keyExtractor={(move) => move.moveId}
+                  style={{
+                    flex: 1,
+                    height: "100%",
+                    width: "100%",
+                    backgroundColor: "white",
+                  }}
+                />
+              </View>
+            </TabScreen>
+          </Tabs>
+        </TabsProvider>
+      </View>
     </View>
   );
 }
