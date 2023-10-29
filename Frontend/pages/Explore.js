@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState } from "react";
 import {
   View,
@@ -9,12 +8,6 @@ import {
   ScrollView,
 } from "react-native";
 import { Card, Button, IconButton, Text } from "react-native-paper";
-=======
-import React from "react";
-import { View, Text, FlatList } from "react-native";
-import { Card, Button } from "react-native-paper";
-import MoveCard from "../components/MoveCard";
->>>>>>> 287d7a772993480decfc178432bdd60531b4bb57
 
 export default function Explore() {
   const moves = [
