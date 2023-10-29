@@ -91,11 +91,10 @@ export default function Onboarding() {
                     console.error('Error creating chat:', error);
                 });
         }
-
+        navigation.navigate("Tab Screen");
     }
 
 
-    navigation.navigate("Tab Screen");
 
 
     return (
