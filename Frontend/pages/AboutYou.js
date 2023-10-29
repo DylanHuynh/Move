@@ -13,6 +13,9 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { useNavigation } from "@react-navigation/native";
 
+const REACT_APP_GOOGLE_PLACES_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_PLACES_API_KEY
+// const REACT_APP_GOOGLE_PLACES_API_KEY = "AIzaSyCnGMj8SzB61nPZ4Ljic6E6sj1pULOX9g4"
+
 export default function AboutYou() {
   const navigation = useNavigation();
 
@@ -21,50 +24,28 @@ export default function AboutYou() {
 
   const [date, setDate] = useState(new Date());
 
+
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate;
     setDate(currentDate);
   };
-  const GOOGLE_PLACES_API_KEY = "AIzaSyCnGMj8SzB61nPZ4Ljic6E6sj1pULOX9g4";
-
-  // useEffect(() => {
-  //     (async () => {
-
-  //       let { status } = await Location.requestForegroundPermissionsAsync();
-  //       if (status !== 'granted') {
-  //         setErrorMsg('Permission to access location was denied');
-  //         return;
-  //       }
-
-  //       let location = await Location.getCurrentPositionAsync({});
-  //       setLocation(location);
-  //     })();
-  //   }, []);
-
-  //   let text = 'Waiting..';
-  //   if (errorMsg) {
-  //     text = errorMsg;
-  //   } else if (location) {
-  //     text = JSON.stringify(location);
-  //   }
 
   return (
-    <View className="flex flex-col p-10 h-full justify-between">
-      <ScrollView >
+    <View className="bg-background-color flex flex-col p-10 h-full justify-between">
+      <View>
       <Text variant="displaySmall">tell me about yourself</Text>
-      
-        <View className="flex flex-col justify-between">
+        <View className="flex flex-col justify-between py-4">
           <Text variant="titleLarge">what's your name</Text>
           <View className="">
             <TextInput
               label="name"
-              mode={"outlined"}
-              onChangeText={() => console.log()}
+              mode={'contained-tonal'}
+              className="bg-background-color"
             />
           </View>
         </View>
 
-        <View className="flex flex-row items-start justify-between">
+        <View className="flex flex-row items-start">
           <Text variant="titleLarge">when's your birthday?</Text>
           <DateTimePicker
             testID="dateTimePicker"
@@ -77,7 +58,7 @@ export default function AboutYou() {
         </View>
 
         <View className="flex flex-column justify-between h-1/2">
-          <Text variant="titleLarge">where are you based?</Text>
+          <Text variant="titleLarge" className="py-4">where are you based?</Text>
           {/* <View className="border-2 h-[10vh] border-primary-color rounded-md"> */}
           <GooglePlacesAutocomplete
             placeholder="drop the addy"
@@ -87,18 +68,28 @@ export default function AboutYou() {
               console.log(city);
             }}
             query={{
-              key: GOOGLE_PLACES_API_KEY,
+              key: REACT_APP_GOOGLE_PLACES_API_KEY,
               language: "en",
+            }}
+            styles={{
+              textInputContainer: {
+                backgroundColor: '#F8F5EE',
+                borderTopWidth: 0,
+                borderBottomWidth:1
+              },
             }}
           />
           {/* </View>    */}
         </View>
-      </ScrollView>
+        </View>
+       
 
       <Button
         onPress={() => navigation.navigate("Onboarding")}
         mode="contained"
-        className="bg-primary-color"
+        // className="bg-primary-color"
+        style={{backgroundColor: "#FFD978"}}
+        textColor="black"
       >
         next!
       </Button>

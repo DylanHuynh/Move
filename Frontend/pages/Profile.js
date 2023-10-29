@@ -121,7 +121,6 @@ export default function Profile() {
                     <Icon name="user-plus" size={24} color="black" />
                 </Pressable>
             </View>
-
             {isSearchBarVisible && (
                 <View style={styles.searchBar}>
                     <TextInput
