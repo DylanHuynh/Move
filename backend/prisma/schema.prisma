@@ -48,7 +48,7 @@ model Move {
 model Message {
   id        Int      @id @default(sequence())
   chatId    Int
-  chat      Chat     @relation(fields: [chatId], references: [id])
+  chat      Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
   timestamp DateTime @default(now())
   authorId  Int
   author    User     @relation(fields: [authorId], references: [id])

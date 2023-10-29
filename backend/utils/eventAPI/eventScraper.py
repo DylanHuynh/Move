@@ -1,13 +1,28 @@
 from fastapi import FastAPI, HTTPException
 import httpx
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+origins = [
+    "http://localhost",
+    "http://localhost:8000"
+    "http://localhost:8080",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 SERPAPI_BASE_URL = "https://serpapi.com/search.json"
 SERPAPI_API_KEY = "83d2b840c7bbb4cdaed2f043c1ef74ee888533d35003313516b8e9001f0fb085"
 
 @app.get("/get-events/")
-async def get_events(city: str = "San Francisco", event_type: str = "", date: str = "today"):
+async def get_events(city: str = "San Francisco", event_type: str = "", date: str = "week"):
     params = {
         "engine": "google_events",
         "q": f"Events in {city}",
@@ -25,22 +40,23 @@ async def get_events(city: str = "San Francisco", event_type: str = "", date: st
 
     results = response.json()
     events_results = results.get("events_results", [])
-    events_dict = {}
-    for event in events_results:
-        title = event.get('title', 'Unknown Event')
-        date = event.get('date', {}).get('start_date', 'Unknown Date')
-        time = event.get('date', {}).get('when', 'Unknown Time')
-        location = ', '.join(event.get('address', ['Unknown Location']))
-        description = event.get('description', 'No description available')
-        
-        events_dict[title] = {
-            'Location': location,
-            'Date': date,
-            'Time': time,
-            'Description': description
-        }
-    print(events_dict['MAKANO MEMORIAS EN REDWOOD CITY CA']['Location'])
-    return events_dict
+    # print(events_results)
+    return events_results
+    # events_dict = {}
+    # for event in events_results:
+    #     title = event.get('title', 'Unknown Event')
+    #     date = event.get('date', {}).get('start_date', 'Unknown Date')
+    #     time = event.get('date', {}).get('when', 'Unknown Time')
+    #     location = ', '.join(event.get('address', ['Unknown Location']))
+    #     description = event.get('description', 'No description available')
+
+    #     events_dict[title] = {
+    #         'Location': location,
+    #         'Date': date,
+    #         'Time': time,
+    #         'Description': description
+    #     }
+    # return events_dict
 
 if __name__ == "__main__":
     import uvicorn
