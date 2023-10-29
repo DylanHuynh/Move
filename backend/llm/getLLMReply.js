@@ -64,6 +64,7 @@ const getLLMReply = async (user, userMessage, chatId) => {
 
   // context strings from different sources, separated by \n
   const context = await getContext(userId, userMessage);
+  console.log(context)
   const LLMOutput = await postLLM(generateReplyPrompt(context, chatHistory, userName, userMessage));
   if (LLMOutput == "getActivities") {
     let request, location;
@@ -83,11 +84,12 @@ const getLLMReply = async (user, userMessage, chatId) => {
 
 (async () => {
   // console.log(await assembleDialogueContext("Input", "Output", 2, 2));
-  // console.log(await getLLMReply({name: "Evan"}, "What should my friend and I do this weekend?"));
+  console.log(await getLLMReply({name: "Evan", id: 2}, "What should my friend and I do this weekend?", 2));
   // console.log(await postTogetherAI());
   // const chatHistory = await assembleDialogueContext("Evan", "MoveAI", 4, 2);
   // console.log(chatHistory);
   // console.log(await isolateLocation("It's friday... what\\'s the move?", chatHistory));
+  // console.log(await getContext(2, "hello"))
 })()
 
 module.exports = { getLLMReply };
