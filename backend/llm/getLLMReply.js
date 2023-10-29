@@ -7,7 +7,7 @@ const { formatDialogue } = require('../utils/stringUtils');
 const { getLastTenMessagesByUserInChat } = require('../utils/prismaUtils');
 const axios = require('axios')
 
-const CHAT_HISTORY_MEMORY = 10;
+const CHAT_HISTORY_MEMORY = 5;
 const OpenAI =  require('openai');
 const openai = new OpenAI({
   apiKey: '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'
