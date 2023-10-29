@@ -26,6 +26,7 @@ const resolvers = {
     chats: () => prisma.chat.findMany(),
     chat: (_, { id }) => prisma.chat.findUnique({ where: { id } }),
     getUserMoves: (_, { userId, status }) => prisma.move.findMany({ where: { userId, status } }),
+    getUserMoveMembers: (_, { moveId }) => prisma.user.findMany({ where: { moveId } }),
     moves: () => prisma.move.findMany(),
     move: (_, { id }) => prisma.move.findUnique({ where: { id } }),
     messages: () => prisma.message.findMany(),

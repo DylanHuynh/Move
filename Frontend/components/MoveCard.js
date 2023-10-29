@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useQuery, gql } from "@apollo/client";
 import {
     View,
     FlatList,
@@ -31,6 +32,21 @@ export default MoveCard = (item) => {
         }
     }
 `);
+    const [currentMoves, setCurrentMoves] = useState([]);
+    const GET_MOVE_MEMBERS = gql`
+    query {
+        getUserMoveMembers (moveId: 2)
+  }`
+
+    const { loading: currentLoading, error: currentError, data: currentData } = useQuery(GET_MOVE_MEMBERS);
+
+    useEffect(() => {
+        if (!currentLoading && currentData) {
+            setCurrentMoves(currentData.getUserMoveMembers);
+        }
+
+    }, [currentLoading, currentData]);
+
 
     const declineMove = () => {
         setModalVisible(!modalVisible);
@@ -160,7 +176,7 @@ export default MoveCard = (item) => {
                                 </Text>
                                 <View className="flex flex-row justify-evenly items-center">
                                     {/* <Avatar.Text size={24} label="XD" /> */}
-                                    {moveObj.moveMembers.slice(0, 4).map((member) => {
+                                    {currentMoves.slice(0, 4).map((member) => {
                                         return (
                                             <View className="items-center">
                                                 <Avatar.Text
@@ -173,9 +189,9 @@ export default MoveCard = (item) => {
                                             </View>
                                         );
                                     })}
-                                    {moveObj.moveMembers.length > 4 ? (
+                                    {currentMoves.length > 4 ? (
                                         <Text variant="titleMedium">
-                                            +{moveObj.moveMembers.length - 4} more!
+                                            +{currentMoves.length - 4} more!
                                         </Text>
                                     ) : null}
                                 </View>
