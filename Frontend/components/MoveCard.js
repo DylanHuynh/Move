@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useQuery, gql } from "@apollo/client";
 import {
     View,
     FlatList,
@@ -12,9 +11,10 @@ import { Card, Button, IconButton, Text, Avatar } from "react-native-paper";
 import { useQuery, useMutation, gql } from '@apollo/client';
 import { useNavigation } from '@react-navigation/native';
 
-export default MoveCard = (item) => {
+export default MoveCard = ({ move, page }) => {
+    const navigation = useNavigation();
     const imgSource = { uri: "https://picsum.photos/700" };
-    const moveObj = item["move"];
+    const moveObj = move;
     const [modalVisible, setModalVisible] = useState(false);
 
     const [updateMoveUserIds, { moveError }] = useMutation(gql`
@@ -51,6 +51,7 @@ export default MoveCard = (item) => {
     const declineMove = () => {
         setModalVisible(!modalVisible);
     };
+
 
     const acceptMove = () => {
         setModalVisible(!modalVisible);
@@ -199,13 +200,27 @@ export default MoveCard = (item) => {
                         </View>
 
                         <View className="flex flex-row justify-center p-2">
-                            <Button
-                                textColor="white"
-                                className="bg-primary-color w-1/3 m-10"
-                                onPress={acceptMove}
-                            >
-                                Accept
-                            </Button>
+
+                            {page == "explore" ?
+                                <Button
+                                    textColor="white"
+                                    className="bg-primary-color w-1/3 m-10"
+                                    onPress={acceptMove}
+                                >
+                                    Accept
+                                </Button> : <Button
+                                    textColor="white"
+                                    className="bg-primary-color w-1/3 m-10"
+                                    onPress={() => {
+                                        setModalVisible(!modalVisible);
+                                        navigation.navigate("Chat", { chatId: moveObj.chatId })
+                                    }
+                                    }
+                                >
+                                    Message
+                                </Button>}
+
+
                             {/* <Button
                 textColor="black"
                 className="bg-secondary-color w-1/3 m-10 ml-5"

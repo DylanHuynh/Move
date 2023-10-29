@@ -55,7 +55,7 @@ export default function Explore() {
   ];
 
   const renderMoveCard = (item) => {
-    return <MoveCard move={item["item"]}/>;
+    return <MoveCard move={item["item"]} page="explore"/>;
   };
   return (
     <View className="h-full w-full bg-background-color pl-4 pr-4">

@@ -17,7 +17,7 @@ const Stack = createNativeStackNavigator();
 
 // Initialize Apollo Client
 const client = new ApolloClient({
-  uri: 'https://d845-199-115-241-214.ngrok.io/graphql',
+  uri: 'https://0432-2600-1010-b06a-c294-89ce-6655-bc36-29cd.ngrok.io/graphql',
   cache: new InMemoryCache(),
 });
 
