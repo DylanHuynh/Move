@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "Move" ALTER COLUMN "title" DROP DEFAULT;

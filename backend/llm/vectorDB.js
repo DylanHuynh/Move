@@ -118,8 +118,8 @@ const queryVector = async (userId, text) => {
     consistency_level: ConsistencyLevelEnum.Strong,
   });
   if (res.status.error_code == 'Success')
-    return res.results.map((result) => result.text);
-  return []
+    return res.results.map((result) => result.text).join("\n");
+  return ""
 }
 
 module.exports = { getClient, queryVector, initVectorDB, insertVector, wipeVectorDB };

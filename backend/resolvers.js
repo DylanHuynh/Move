@@ -13,7 +13,7 @@ const resolvers = {
     user: (_, { id }) => prisma.user.findUnique({ where: { id } }),
     getChatByUserId: (_, { userId }) => {
       return null;
-      const user = prisma.user.findUnique({ where: { userId }});
+      const user = prisma.user.findUnique({ where: { userId } });
       if (!user || !user.chats) {
         return null;
       }
@@ -25,19 +25,34 @@ const resolvers = {
     },
     chats: () => prisma.chat.findMany(),
     chat: (_, { id }) => prisma.chat.findUnique({ where: { id } }),
-    getUserMoves: (_, { userId, status}) => prisma.move.findMany({ where: { userId, status}}),
+    getUserMoves: (_, { userId, status }) => prisma.move.findMany({ where: { userId, status } }),
     moves: () => prisma.move.findMany(),
     move: (_, { id }) => prisma.move.findUnique({ where: { id } }),
     messages: () => prisma.message.findMany(),
     message: (_, { id }) => prisma.message.findUnique({ where: { id } }),
   },
   Mutation: {
-    createAIUser: (_, {  }) => prisma.user.create({ data: { id: 0, name: "MoveAI", email: "" } }),
+    createAIUser: (_, { }) => prisma.user.create({ data: { id: 0, name: "MoveAI", email: "" } }),
     createUser: (_, { id, name, email }) => prisma.user.create({ data: { id, name, email } }),
     createChat: (_, { ownerId, type }) => prisma.chat.create({ data: { ownerId, type } }),
-    createMove: async (_, { userId, location, time, description, chatId, type, status }) => {
+    createMove: async (_, { userIds, userId, location, time, description, chatId, type, status }) => {
       const title = await getMoveTitle(description);
-      return prisma.move.create({ data: { title, userId, location, time, description, chatId, type, status } })},
+      return prisma.move.create({ data: { userIds, title, userId, location, time, description, chatId, type, status } })
+    },
+    updateMoveUserIds: async (_, { moveId, userId }) => {
+      const move = await prisma.move.findUnique({ where: { id: moveId } });
+
+      if (!move) {
+        throw new Error("Move not found");
+      }
+
+      // Update the moves's friendIds list
+      const updatedMoveUserIds = [move.userIds, userId];
+      await prisma.move.update({
+        where: { id: moveId },
+        data: { userIds: updatedMoveUserIds },
+      })
+    },
     createMessage: async (_, { chatId, authorId, text }) => {
       await prisma.message.create({ data: { chatId, authorId, text } });
       const userMessages = await prisma.user.findUnique({ where: { id: authorId } }).messages()
@@ -110,7 +125,7 @@ const resolvers = {
       return "Friend added successfully!";
     },
     deleteUser: (_, { userId }) => prisma.user.delete({ where: { id: userId }, }),
-    deleteUsers: (_, {}) => prisma.user.deleteMany({})
+    deleteUsers: (_, { }) => prisma.user.deleteMany({})
   },
   User: {
     chats: (parent) => prisma.user.findUnique({ where: { id: parent.id } }).chats(),

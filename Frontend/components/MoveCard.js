@@ -1,11 +1,11 @@
 import React, { useState, useQuery, gql } from "react";
 import {
-  View,
-  FlatList,
-  Modal,
-  Linking,
-  Image,
-  ScrollView,
+    View,
+    FlatList,
+    Modal,
+    Linking,
+    Image,
+    ScrollView,
 } from "react-native";
 import { Card, Button, IconButton, Text, Avatar } from "react-native-paper";
 
@@ -16,12 +16,12 @@ export default MoveCard = (item) => {
   const moveObj = item["move"];
   const [modalVisible, setModalVisible] = useState(false);
 
-  const acceptMove = () => {
-    setModalVisible(!modalVisible);
-  };
-  const declineMove = () => {
-    setModalVisible(!modalVisible);
-  };
+    const acceptMove = () => {
+        setModalVisible(!modalVisible);
+    };
+    const declineMove = () => {
+        setModalVisible(!modalVisible);
+    };
 
   return (
     <View className="bg-background-color w-full py-6">
