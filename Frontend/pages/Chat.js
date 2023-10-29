@@ -121,6 +121,15 @@ export default function Chat({ existingChat = false }) {
     }
 `);
 
+    const [createMove, { moveError }] = useMutation(gql`
+    mutation CreateMove($userId: Int!, $location: String!, $time: DateTime!, $description: String!, $chatId: Int!, $type: String!, $status: String!) {
+        createMove(userId: $userId, location: $location, time: $time, description: $description, chatId: $chatId, type: $type, status: $status) {
+            text
+            id
+        }
+    }
+`);
+
     const onSend = useCallback((messages = []) => {
 
         //TODO: send message to BE probably updateMessage(newMessage)
@@ -131,14 +140,14 @@ export default function Chat({ existingChat = false }) {
         let aiResponse = "I don't know the answer!";
 
 
-        console.log("pre-reply",{messages});
+        console.log("pre-reply", { messages });
 
         // AI Response
         if (error) {
             console.log('Error', error.message);
         } else {
             console.log(loading);
-            console.log("MESSAGE: ", messages[0].text)
+            console.log("MESSAGE DICT: ", messages[0])
             createMessage({
                 variables: {
                     chatId: 2,
@@ -149,7 +158,27 @@ export default function Chat({ existingChat = false }) {
                 .then((result) => {
                     // Handle successful response
                     console.log('Message created successfully:', result);
-                    aiResponse = result.data.createMessage.text;
+                    try {
+                        ({ message, description, time, location } = JSON.parse(result.data.createMessage.text));
+                        aiResponse = message;
+                        createMove({
+                            variables: {
+                                userId: 2,
+                                location,
+                                time,
+                                description,
+                                chatId,
+                                type: "solo",
+                                status: "active"
+                            },
+                        })
+                        Keyboard.dismiss();
+                        showModal();
+
+
+                    } catch (error) {
+                        aiResponse = result.data.createMessage.text;
+                    }
                     setMessages(previousMessages =>
                         GiftedChat.append(previousMessages, [
                             {
@@ -169,13 +198,12 @@ export default function Chat({ existingChat = false }) {
                     // Handle error response
                     console.error('Error creating chat:', error);
                 });
-                console.log("post-reply",{messages});
+            console.log("post-reply", { messages });
         }
 
 
 
-        Keyboard.dismiss();
-        showModal();
+
 
     }, [messages[messages.length - 1]])
 

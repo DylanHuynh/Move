@@ -74,7 +74,7 @@ const resolvers = {
 
       const user = await prisma.user.findUnique({ where: { id: authorId } })
       const reply = await getLLMReply(user, text);
-      
+
       await prisma.message.create({ data: { chatId, authorId, text } });
       // Insert user message into vector database for future context
       if (userMessages.length % MESSAGE_CHUNK_SIZE == 0) {
