@@ -29,13 +29,14 @@ model User {
   messages    Message[]
   moveIds     Move[]
   preferences Preferences?
+  motion      Int          @default(0)
 }
 
 model Move {
   id          Int      @id @default(sequence())
   location    String
   time        DateTime
-  userId      Int
+  userId      Int // This is the creator!!
   userIds     Int[]
   description String
   type        String
