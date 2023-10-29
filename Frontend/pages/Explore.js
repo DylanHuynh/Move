@@ -10,7 +10,6 @@ import {
 import { Card, Button, IconButton, Text } from "react-native-paper";
 import MoveCard from "../components/MoveCard";
 
-
 export default function Explore() {
   const moves = [
     {

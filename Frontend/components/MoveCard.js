@@ -1,11 +1,19 @@
-import React, { useQuery, gql } from "react";
-import { View, Text, FlatList } from "react-native";
-import { Card, Button } from "react-native-paper";
+import React, { useState, useQuery, gql } from "react";
+import {
+  View,
+  FlatList,
+  Modal,
+  Linking,
+  Image,
+  ScrollView,
+} from "react-native";
+import { Card, Button, IconButton, Text } from "react-native-paper";
 
 import { useNavigation } from '@react-navigation/native';
 
-export default function MoveCard({item}) {
-  const moveObj = item["move"];
+export default MoveCard = (item) => {
+  const imgSource = { uri: "https://picsum.photos/700" };
+  const moveObj = item['move'];
   const [modalVisible, setModalVisible] = useState(false);
 
   const acceptMove = () => {
