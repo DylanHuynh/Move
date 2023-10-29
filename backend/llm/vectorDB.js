@@ -13,6 +13,7 @@ const getClient = () => new MilvusClient({
 const wipeVectorDB = async () => {
   const milvusClient = getClient();
   await milvusClient.dropCollection({collection_name: "context"})
+  milvusClient.closeConnection();
 }
 
 const initVectorDB = async () => {
@@ -55,24 +56,24 @@ const initVectorDB = async () => {
       },
     ]
   }
-
+  
   const createCollection = await milvusClient.createCollection(params);
-
+  
   const index_params = {
     metric_type: "L2",
     index_type: "AUTOINDEX",
     params: JSON.stringify({ nlist: 1024 }),
   };
-
+  
   console.log(await milvusClient.createIndex({
     collection_name: "context",
     field_name: "vector",
     index_name: "index",
     extra_params: index_params,
   }));
-
+  
   console.log(await milvusClient.loadCollection({collection_name: "context"}))
-
+  
   console.log('Database is created', createCollection);
 };
 
@@ -90,6 +91,7 @@ const seedDB = async () => {
   // }
 }
 
+
 const insertVector = async (userId, text, context_type) => {
   const milvusClient = getClient();
 
@@ -100,10 +102,7 @@ const insertVector = async (userId, text, context_type) => {
     userId,
   }];
 
-  console.log(await milvusClient.insert({
-    collection_name: "context",
-    data: data,
-  }));
+  milvusClient.insert({collection_name: "context", data});
 }
 
 const queryVector = async (userId, text) => {
@@ -117,6 +116,7 @@ const queryVector = async (userId, text) => {
     limit: 10,
     consistency_level: ConsistencyLevelEnum.Strong,
   });
+  milvusClient.closeConnection();
   if (res.status.error_code == 'Success')
     return res.results.map((result) => result.text).join("\n");
   return ""

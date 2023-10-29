@@ -20,4 +20,18 @@ const getLastTenMessagesByUserInChat = async (userId, chatId) => {
   }
 }
 
-module.exports = {getLastTenMessagesByUserInChat};
+const getPreferencesByUser = async (userId) => {
+  try {
+    const preferences = await prisma.preferences.findUnique({
+      where: {
+        userId
+      }
+    });
+    return preferences;
+  } catch (error) {
+    console.error('Error fetching messages:', error);
+    throw error;
+  }
+}
+
+module.exports = {getLastTenMessagesByUserInChat, getPreferencesByUser};

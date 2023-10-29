@@ -15,6 +15,7 @@ const typeDefs = gql`
   move(id: Int!): Move
   messages: [Message!]!
   message(id: Int!): Message
+  preferences: Preferences
 }
 
 type Mutation {
@@ -23,7 +24,7 @@ type Mutation {
   createChat(ownerId: Int!, type: String!): Chat!
   createMove(userId: Int!, location: String!, time: DateTime!, description: String!, chatId: Int!, type: String!, status: String!): Move!
   createMessage(chatId: Int!, authorId: Int!, text: String!): Message!
-  createPreferences(userId: Int!, preference: String!): Preferences!
+  createPreferences(userId: Int!, alcohol: Boolean!): Preferences!
   addFriend(userId: Int!, friendId: Int!): String!
   addFriendByEmail(userId: Int!, email: String!): String!
   updateMoveUserIds(moveId: Int!, userId: Int!): Move!
@@ -32,6 +33,7 @@ type Mutation {
   deleteUsers: Boolean!
   deleteMessage(messageId: Int!): Boolean!
   deleteMessages: Boolean!
+  deletePreferences: Boolean!
 }
 
 type User {

@@ -31,6 +31,7 @@ const resolvers = {
     move: (_, { id }) => prisma.move.findUnique({ where: { id } }),
     messages: () => prisma.message.findMany(),
     message: (_, { id }) => prisma.message.findUnique({ where: { id } }),
+    preferences: async (_, {}) => await prisma.preferences.findMany({}),
   },
   Mutation: {
     createAIUser: (_, { }) => prisma.user.create({ data: { id: 0, name: "MoveAI", email: "" } }),
@@ -75,16 +76,18 @@ const resolvers = {
 
       const user = await prisma.user.findUnique({ where: { id: authorId } })
       const reply = await getLLMReply(user, text);
-
       await prisma.message.create({ data: { chatId, authorId, text } });
       // Insert user message into vector database for future context
       if (userMessages.length % MESSAGE_CHUNK_SIZE == 0) {
-        insertVector(userMessages.slice(-MESSAGE_CHUNK_SIZE).join(" "), "message");
+        insertVector(authorId, userMessages.slice(-MESSAGE_CHUNK_SIZE).join(" "), "message");
       }
       return prisma.message.create({ data: { chatId, authorId: LLM_AUTHOR_ID, text: reply } });
     },
-    createPreferences: (_, { userId, preference }) =>
-      prisma.preferences.create({ data: { userId, preference } }),
+    createPreferences: async (_, { userId, alcohol }) => {
+      const preferences = await prisma.preferences.create({ data: { userId, alcohol } });
+      insertVector(userId, `I'm ${alcohol && 'not'} okay with alcohol.`, "preference");
+      return preferences;
+    },
     addFriend: async (_, { userId, friendId }) => {
       // Check if the user and the friend exist
       const user = await prisma.user.findUnique({ where: { id: userId } });
@@ -145,6 +148,7 @@ const resolvers = {
     deleteUsers: (_, { }) => prisma.user.deleteMany({}),
     deleteMessage: (_, { messageId }) => prisma.message.delete({ where: { id: messageId }, }) && true,
     deleteMessages: async (_, { }) => await prisma.message.deleteMany({}) && true,
+    deletePreferences: async (_, { }) => await prisma.preferences.deleteMany({}) && true,
   },
   User: {
     chats: (parent) => prisma.user.findUnique({ where: { id: parent.id } }).chats(),
