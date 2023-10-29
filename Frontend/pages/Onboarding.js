@@ -10,9 +10,6 @@ import { Text, TextInput, Button } from "react-native-paper";
 import { auth } from "../firebaseConfig";
 import {
     getAuth,
-    createUserWithEmailAndPassword,
-    signInWithPopup,
-    GoogleAuthProvider,
 } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import { useNavigation, useRoute } from '@react-navigation/native';
