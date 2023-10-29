@@ -4,56 +4,6 @@ import { Button, TextInput, Text } from 'react-native-paper';
 import { Tabs, TabScreen, TabsProvider } from 'react-native-paper-tabs';
 import { StyleSheet, View, Pressable } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-// const [createMessage, { data, loading, error }] = useMutation(gql
-//     mutation CreateMessage($chatId: Int!, $authorId: Int!, $text: String!) {
-//         createMessage(chatId: $chatId, authorId: $authorId, text: $text) {
-//             text
-//             id
-//         }
-//     }
-// );
-
-//     const onSend = useCallback((messages = []) => {
-
-//         //TODO: send message to BE probably updateMessage(newMessage)
-//         setMessages(previousMessages =>
-//             GiftedChat.append(previousMessages, messages[messages.length - 1]),
-//         )
-
-//         let aiResponse = "I don't know the answer!";
-
-
-//         console.log("pre-reply",{messages});
-
-//         // AI Response
-//         if (error) {
-//             console.log('Error', error.message);
-//         } else {
-//             console.log(loading);
-//             console.log("MESSAGE: ", messages[0].text)
-//             createMessage({
-//                 variables: {
-//                     chatId: 2,
-//                     authorId: 1, //TODO: hook up userId
-//                     text: messages[0].text,
-//                 },
-//             })
-//                 .then((result) => {
-//                     // Handle successful response
-//                     console.log('Message created successfully:', result);
-//                     aiResponse = result.data.createMessage.text;
-//                     setMessages(previousMessages =>
-//                         GiftedChat.append(previousMessages, [
-//                             {
-//                                 _id: result.data.createMessage.id,
-//                                 text: aiResponse,
-//                                 createdAt: new Date(),
-//                                 user: {
-//                                     _id: 0,
-//                                     name: 'React Native',
-//                                     avatar: 'https://placeimg.com/140/140/any',
-//                                 },
-//                             },
 
 const GET_CURRENT_MOVES = gql`
     query {
@@ -87,12 +37,6 @@ const GET_PAST_MOVES = gql`
     }
 `;
 
-// const ADD_FRIEND_BY_EMAIL = gql`
-//     mutation{
-//         addFriendByEmail(userId: 1, email: "evann@gmail.com") 
-//     }
-// `;
-
 export default function Profile() {
     const [currentMoves, setCurrentMoves] = useState([]);
     const [pastMoves, setPastMoves] = useState([]);
@@ -115,7 +59,6 @@ export default function Profile() {
 
     const { loading: currentLoading, error: currentError, data: currentData } = useQuery(GET_CURRENT_MOVES);
     const { loading: pastLoading, error: pastError, data: pastData } = useQuery(GET_PAST_MOVES);
-    // const [addFriendByEmail] = useMutation(ADD_FRIEND_BY_EMAIL);
 
     useEffect(() => {
         if (!currentLoading && currentData) {
@@ -125,18 +68,6 @@ export default function Profile() {
             setPastMoves(pastData.getUserMoves);
         }
     }, [currentLoading, currentData, pastLoading, pastData]);
-
-    // const handleAddFriend = async () => {
-    //     try {
-    //         const response = await addFriendByEmail();
-    //         console.log(response.data.addFriendByEmail);
-    //         setEmail('');
-    //         setSearchBarVisible(false);
-    //         // Optionally: Update UI to show success message or refresh friend list
-    //     } catch (error) {
-    //         console.error('Error adding friend:', error);
-    //     }
-    // };
 
     return (
         <View style={styles.container}>
@@ -155,12 +86,14 @@ export default function Profile() {
                         onChangeText={setEmail}
                         style={styles.textInput}
                     />
-                    <Button onPress={addFriendByEmail({
+                    <Button onPress={() => {addFriendByEmail({
                         variables: {
                             userId: 1,
                             email
                         }
-                    })} style={styles.addButton}>Add Friend</Button>
+                    })
+                    setEmail('')}
+                    } style={styles.addButton}>Add Friend</Button>
                 </View>
             )}
 
