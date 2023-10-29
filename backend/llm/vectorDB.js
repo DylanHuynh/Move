@@ -85,9 +85,9 @@ const seedDB = async () => {
   await insertVector(1, "i love dogs!!", "message");
   await insertVector(1, "i want to go to a zoo.", "message");
 
-  for (let i = 0; i < 10; i++) {
+  // for (let i = 0; i < 10; i++) {
     
-  }
+  // }
 }
 
 const insertVector = async (userId, text, context_type) => {

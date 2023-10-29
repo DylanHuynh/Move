@@ -28,6 +28,8 @@ type Mutation {
   updateMoveUserIds(moveId: Int!, userId: Int!): Move!
   deleteUser(userId: Int!): Boolean!
   deleteUsers: Boolean!
+  deleteMessage(messageId: Int!): Boolean!
+  deleteMessages: Boolean!
 }
 
 type User {
