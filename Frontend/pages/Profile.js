@@ -108,7 +108,7 @@ export default function Profile() {
 
     };
     const renderMoveCard = (item) => {
-        return <MoveCard move={item["item"]} />;
+        return <MoveCard className="p-2" move={item["item"]} />;
     };
 
 

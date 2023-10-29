@@ -48,7 +48,7 @@ export default function Explore() {
   };
 
   return (
-    <View className="h-full w-full bg-white  p-4">
+    <View className="h-full w-full bg-white p-4">
       <FlatList
         data={moves}
         renderItem={renderMoveCard}

@@ -59,6 +59,7 @@ type Move {
   time: DateTime!
   userId: Int!
   user: User!
+  userIds: [Int!]!
   description: String!
   chatId: Int!
   chat: Chat!
