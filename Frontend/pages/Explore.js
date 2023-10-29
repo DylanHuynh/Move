@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   FlatList,
@@ -8,6 +8,8 @@ import {
   ScrollView,
 } from "react-native";
 import { Card, Button, IconButton, Text } from "react-native-paper";
+import { useQuery, useMutation, gql } from "@apollo/client";
+
 import MoveCard from "../components/MoveCard";
 
 export default function Explore() {
@@ -29,7 +31,7 @@ export default function Explore() {
     }
 `;
 
-  const { loading: currentLoading, error: currentError, data: currentData } = useQuery(GET_MOVE_MEMBERS);
+  const { loading: currentLoading, error: currentError, data: currentData } = useQuery(GET_MOVES);
 
   useEffect(() => {
     if (!currentLoading && currentData) {

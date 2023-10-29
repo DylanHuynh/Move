@@ -18,7 +18,7 @@ const REACT_APP_GOOGLE_PLACES_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_PLACES_AP
 
 export default function AboutYou() {
   const navigation = useNavigation();
-
+  const [name, setName] = useState("");
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
 
@@ -39,6 +39,8 @@ export default function AboutYou() {
           <View className="">
             <TextInput
               label="name"
+              value={name}
+              onChange={(n) => setName(n)}
               mode={'contained-tonal'}
               className="bg-background-color"
             />
@@ -82,10 +84,10 @@ export default function AboutYou() {
           {/* </View>    */}
         </View>
         </View>
-       
+
 
       <Button
-        onPress={() => navigation.navigate("Onboarding")}
+        onPress={() => navigation.navigate("Onboarding", {name})}
         mode="contained"
         // className="bg-primary-color"
         style={{backgroundColor: "#FFD978"}}

@@ -113,13 +113,13 @@ export default function Chat({ existingChat = false }) {
     console.log("about to use mutation!!!")
     // // GOOGLE API KEY FUNCTIONS
     const [createMessage, { data, loading, error }] = useMutation(gql`
-    mutation CreateMessage($chatId: Int!, $authorId: Int!, $text: String!) {
-        createMessage(chatId: $chatId, authorId: $authorId, text: $text) {
-            text
-            id
+        mutation CreateMessage($chatId: Int!, $authorId: Int!, $text: String!) {
+            createMessage(chatId: $chatId, authorId: $authorId, text: $text) {
+                text
+                id
+            }
         }
-    }
-`);
+    `);
 
     const [createMove, { moveError }] = useMutation(gql`
     mutation CreateMove($userId: Int!, $location: String!, $time: DateTime!, $description: String!, $chatId: Int!, $type: String!, $status: String!) {
