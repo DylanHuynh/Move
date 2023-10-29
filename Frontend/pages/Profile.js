@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, gql } from '@apollo/client';
 import { Button, TextInput, Text } from 'react-native-paper';
 import { Tabs, TabScreen, TabsProvider } from 'react-native-paper-tabs';
-import { StyleSheet, View, Pressable } from 'react-native';
+import { StyleSheet, View, Pressable, FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const GET_CURRENT_MOVES = gql`
     query {
-      getUserMoves (userId: 7, status: "active") {
+      getUserMoves (userId: 1, status: "active") {
         id
         title
         location
@@ -23,7 +23,7 @@ const GET_CURRENT_MOVES = gql`
 
 const GET_PAST_MOVES = gql`
     query {
-        getUserMoves (userId: 7, status: "past") {
+        getUserMoves (userId: 1, status: "past") {
             id
             title
             location
@@ -48,13 +48,13 @@ export default function Profile() {
         }
     `)
 
-    
+
     const mockProfile = {
         id: 2,
         name: "Bob",
         totalMoves: 3,
     }
-    
+
     const profile = mockProfile;
 
     const { loading: currentLoading, error: currentError, data: currentData } = useQuery(GET_CURRENT_MOVES);
@@ -68,6 +68,10 @@ export default function Profile() {
             setPastMoves(pastData.getUserMoves);
         }
     }, [currentLoading, currentData, pastLoading, pastData]);
+
+    const renderMoveCard = (item) => {
+        return <MoveCard move={item["item"]} />;
+    };
 
     return (
         <View style={styles.container}>
@@ -86,31 +90,44 @@ export default function Profile() {
                         onChangeText={setEmail}
                         style={styles.textInput}
                     />
-                    <Button onPress={() => {addFriendByEmail({
-                        variables: {
-                            userId: 1,
-                            email
-                        }
-                    })
-                    setEmail('')}
+                    <Button onPress={() => {
+                        addFriendByEmail({
+                            variables: {
+                                userId: 1,
+                                email
+                            }
+                        })
+                        setEmail('')
+                    }
                     } style={styles.addButton}>Add Friend</Button>
                 </View>
             )}
-
-            <TabsProvider defaultIndex={1} style={styles.tabsProvider}>
-                <Tabs style={styles.tabs}>
-                    <TabScreen label="Past Moves" icon="history">
-                        <View style={styles.tabContent}>
-                            {/* Render your past moves here */}
-                        </View>
-                    </TabScreen>
-                    <TabScreen label="Current Moves" icon="bag-suitcase">
-                        <View style={styles.tabContent}>
-                            {/* Render your current moves here */}
-                        </View>
-                    </TabScreen>
-                </Tabs>
-            </TabsProvider>
+            <View className="h-full">
+                <TabsProvider defaultIndex={1} style={styles.tabsProvider}>
+                    <Tabs style={styles.tabs}>
+                        <TabScreen label="Past Moves" icon="history">
+                            <View style={styles.tabContent}>
+                                <FlatList
+                                    data={pastData != undefined && pastData["getUserMoves"].length > 0 ? pastData["getUserMoves"] : []}
+                                    renderItem={renderMoveCard}
+                                    keyExtractor={(move) => move.moveId}
+                                    style={{ flex: 1, height: '100%', width: '100%', backgroundColor: "white" }}
+                                />
+                            </View>
+                        </TabScreen>
+                        <TabScreen label="Current Moves" icon="bag-suitcase">
+                            <View style={styles.tabContent}>
+                                <FlatList
+                                    data={currentData != undefined && currentData["getUserMoves"].length > 0 ? currentData["getUserMoves"] : []}
+                                    renderItem={renderMoveCard}
+                                    keyExtractor={(move) => move.moveId}
+                                    style={{ flex: 1, height: '100%', width: '100%', backgroundColor: "white" }}
+                                />
+                            </View>
+                        </TabScreen>
+                    </Tabs>
+                </TabsProvider>
+            </View>
         </View>
     );
 }

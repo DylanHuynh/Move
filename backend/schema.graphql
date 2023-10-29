@@ -10,6 +10,7 @@ const typeDefs = gql`
   chats: [Chat!]!
   chat(id: Int!): Chat
   getUserMoves(userId: Int!, status: String!): [Move!]!
+  getUserMoveMembers(moveId: Int!): [User!]!
   moves: [Move!]!
   move(id: Int!): Move
   messages: [Message!]!
