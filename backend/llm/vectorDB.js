@@ -30,17 +30,22 @@ const initVectorDB = async () => {
         dim: 1024,
       },
       {
+        name: "id",
+        data_type: DataType.Int64,
+        is_primary_key: true,
+        autoID: true,
+        description: "ID",
+      },
+      {
         name: "context_type",
         description: "message or preference",
         data_type: DataType.VarChar,
         max_length: 100,
       },
       {
-        name: "id",
+        name: "userId",
         data_type: DataType.Int64,
-        is_primary_key: true,
-        autoID: true,
-        description: "ID",
+        description: "USER ID",
       },
       {
         name: "text",
@@ -50,7 +55,7 @@ const initVectorDB = async () => {
       },
     ]
   }
-  
+
   const createCollection = await milvusClient.createCollection(params);
 
   const index_params = {
@@ -71,28 +76,27 @@ const initVectorDB = async () => {
   console.log('Database is created', createCollection);
 };
 
-const insertVector = async (text, context_type) => {
+const insertVector = async (userId, text, context_type) => {
   const milvusClient = getClient();
 
   data = [{
     context_type,
     text,
     vector: await getEmbeddingFromHF(text),
+    userId,
   }];
 
   console.log(await milvusClient.insert({
     collection_name: "context",
     data: data,
   }));
-
-  // console.log(await milvusClient.flushSync({ collection_names: ["context"] }));
-
 }
 
-const queryVector = async (text) => {
+const queryVector = async (userId, text) => {
   const milvusClient = getClient();
   const vector = await getEmbeddingFromHF(text);
   const res = await milvusClient.search({
+    filter: "userId == " + userId.toString(),
     collection_name: "context",
     vector,
     output_fields: ["text"],

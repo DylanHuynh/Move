@@ -17,11 +17,14 @@ const typeDefs = gql`
 }
 
 type Mutation {
+  createAIUser: User!
   createUser(name: String!, email: String!): User!
   createChat(ownerId: Int!, type: String!): Chat!
   createMove(userId: Int!, location: String!, time: DateTime!, description: String!, chatId: Int!, type: String!, status: String!): Move!
-  createMessage(chatId: Int!, timestamp: DateTime!, authorId: Int!, text: String!): Message!
+  createMessage(chatId: Int!, authorId: Int!, text: String!): Message!
   createPreferences(userId: Int!, preference: String!): Preferences!
+  addFriend(userId: Int!, friendId: Int!): String!
+  addFriendByEmail(userId: Int!, email: String!): String!
   deleteUser(userId: Int!): Boolean!
   deleteUsers: Boolean!
 }

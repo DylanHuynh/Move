@@ -22,4 +22,4 @@ async function getMoveTitle(eventDescription) {
   return result.output.choices[0].text;
 };
 
-module.exports = getMoveTitle;
+module.exports = {getMoveTitle};
