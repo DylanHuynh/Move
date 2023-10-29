@@ -55,7 +55,7 @@ const initVectorDB = async () => {
       },
     ]
   }
-  
+
   const createCollection = await milvusClient.createCollection(params);
 
   const index_params = {

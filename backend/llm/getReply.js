@@ -36,7 +36,7 @@ const getReply = async (user, userMessage) => {
   return postLLM(generateReplyPrompt(activities, context, userMessage, name));
 };
 
-(async () => { 
+(async () => {
   // console.log(await getReply({name: "Evan", location: "San Francisco"}, "2023-10-28T07:10:51.11", "What should my friend and I do this weekend?"));
   // console.log(await postTogetherAI());
   console.log(await isolateLocation("It's friday... what's the move?"));

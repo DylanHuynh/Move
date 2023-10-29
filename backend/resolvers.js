@@ -11,8 +11,21 @@ const resolvers = {
   Query: {
     users: () => prisma.user.findMany(),
     user: (_, { id }) => prisma.user.findUnique({ where: { id } }),
+    getChatByUserId: (_, { userId }) => {
+      return null;
+      const user = prisma.user.findUnique({ where: { userId }});
+      if (!user || !user.chats) {
+        return null;
+      }
+      for (const chat of user.chats) {
+        if (chat.type == 'solo') {
+          return chat;
+        }
+      }
+    },
     chats: () => prisma.chat.findMany(),
     chat: (_, { id }) => prisma.chat.findUnique({ where: { id } }),
+    getUserMoves: (_, { userId, status}) => prisma.move.findMany({ where: { userId, status}}),
     moves: () => prisma.move.findMany(),
     move: (_, { id }) => prisma.move.findUnique({ where: { id } }),
     messages: () => prisma.message.findMany(),

@@ -1,11 +1,89 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useQuery, useMutation, gql } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Modal, Portal, Button, IconButton } from 'react-native-paper';
 import { StyleSheet, Text, View, Keyboard } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat'
+import { useRoute } from '@react-navigation/native';
 
 
-export default function Chat() {
+export default function Chat({ existingChat = false }) {
+    const route = useRoute();
+    // let { loading: currentLoading, error: currentError, data: chatId } = useQuery(gql`
+    //     query {
+    //         getChatByUserId (userId: 7) {
+    //             id
+    //             friendIds
+    //             messageIds
+    //             creationTime
+    //             owner
+    //             type
+    //             messages
+    //             moves
+    //         }
+    //     }
+    // `)
+    let chatId = 3;
+    if (route.params.id) {
+        chatId = route.params.id; //WILL REPLACE WITH GRABBED ID FROM FIREBASE
+    }
+
+    //TODO: make the above synchrnous with the chained useQuery
+
+    const [chat, setChat] = useState([]);
+    // if (!existingChat) {
+    //     const [createChat] = useMutation(gql`
+    //         mutation {
+    //             createChat (ownerId: Int!, type: String!) {
+    //                 id
+    //                 friendIds
+    //                 messageIds
+    //                 creationTime
+    //                 owner
+    //                 type
+    //                 messages
+    //                 moves
+    //             }
+    //         }
+    //     `);
+
+    //     if (createChat != undefined) {
+    //         createChat({
+    //             variables: {
+    //                 ownerId: 3,
+    //                 type: 'solo',
+    //             },
+    //         })
+    //             .then((result) => {
+    //                 // Handle successful response
+    //                 console.log('Chat created successfully:', result);
+    //             })
+    //             .catch((error) => {
+    //                 // Handle error response
+    //                 console.error('Error creating chat:', error);
+    //             });
+
+    //         setChat(newChat);
+    //     }
+
+    // } else {
+    //     const { data: existingChat } = useQuery(gql`
+    //         query {
+    //             chat(id: ${chatId}) {
+    //                 id,
+    //                 friendIds,
+    //                 messageIds,
+    //                 creationTime,
+    //                 owner,
+    //                 type,
+    //                 messages,
+    //                 moves,
+    //             }
+    //         }
+    //     `);
+    //     setChat(existingChat);
+
+    // }
+
     const [visible, setVisible] = useState(false);
     const [messages, setMessages] = useState([
         {
@@ -71,7 +149,7 @@ export default function Chat() {
                 },
             },
         ])
-    }, [])
+    }, [chat])
 
     return (
         <>
