@@ -7,7 +7,7 @@ import {
     TabScreen,
     TabsProvider
 } from 'react-native-paper-tabs';
-import { Dimensions, StyleSheet, View, Animated, Pressable, Text, FlatList } from 'react-native';
+import { Dimensions, StyleSheet, View, Animated, Pressable, FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import MoveCard from '../components/MoveCard';
@@ -52,39 +52,19 @@ export default function Profile() {
         status
       }
     }`
-    ;
+        ;
 
-const ADD_FRIEND_BY_EMAIL = gql`
-    mutation {
-        addFriendByEmail(userId: 2, email: "evann@gmail.com")
-    }
-`;
-
-export default function Profile() {
-    const [currentMoves, setCurrentMoves] = useState([]);
-    const [pastMoves, setPastMoves] = useState([]);
-    const [email, setEmail] = useState('');
-    const [isSearchBarVisible, setSearchBarVisible] = useState(false);
-    const mockProfile = {
-        id: 1, // Replace with the actual logged-in user's ID
-        name: "Bob",
-        friends: ["12432", "84828"],
-        totalMoves: 3,
-    }
-    const profile = mockProfile;
+    const ADD_FRIEND_BY_EMAIL = gql`
+        mutation {
+            addFriendByEmail(userId: 2, email: "evann@gmail.com")
+        }
+    `;
 
     const { loading: currentLoading, error: currentError, data: currentData } = useQuery(GET_CURRENT_MOVES);
     const { loading: pastLoading, error: pastError, data: pastData } = useQuery(GET_PAST_MOVES);
     const [addFriendByEmail] = useMutation(ADD_FRIEND_BY_EMAIL);
 
     useEffect(() => {
-<<<<<<< HEAD
-        console.log(currentLoading);
-        console.log(currentError);
-
-
-=======
->>>>>>> b241ccd2a9cced5b8c91e81c3c37ac32abee8bdb
         if (!currentLoading && !currentError) {
             console.log('setting current moves');
             setCurrentMoves(currentData.moves);
@@ -96,10 +76,34 @@ export default function Profile() {
         }
     }, [currentLoading, currentError, currentData, pastLoading, pastError, pastData]);
 
-<<<<<<< HEAD
     // setCurrentMoves(currentData);
     // setPastMoves(pastData);
 
+    const handleAddFriend = async () => {
+        try {
+            const response = await addFriendByEmail({
+                variables: {
+                    userId: profile.id,
+                    email: email,
+                },
+            });
+            console.log(response.data.addFriendByEmail);
+            setEmail('');
+            setSearchBarVisible(false);
+            // Optionally: Update UI to show success message or refresh friend list
+        } catch (error) {
+            if (error.graphQLErrors) {
+                // Handle errors from the GraphQL server
+                error.graphQLErrors.map(({ message }) => console.log(message));
+            } else if (error.networkError) {
+                // Handle network errors here
+                console.log('Network error', error.networkError);
+            } else {
+                console.error('Error adding friend:', error);
+            }
+        }
+
+    };
     const renderMoveCard = (item) => {
         return <MoveCard move={item["item"]} />;
     };
@@ -107,11 +111,25 @@ export default function Profile() {
 
     return (
         <View className="flex">
-            <View className='flex-none items-center h-90 p-10'>
-                <Text className="font-bold text-4xl">{mockProfile.name}</Text>
-                <Text>{mockProfile.totalMoves}</Text>
-
+            <View style={styles.header}>
+                <Text style={styles.name}>{profile.name}</Text>
+                <Text style={styles.totalMoves}>{profile.totalMoves} Moves</Text>
+                <Pressable onPress={() => setSearchBarVisible(!isSearchBarVisible)} style={styles.addFriendIcon}>
+                    <Icon name="user-plus" size={24} color="black" />
+                </Pressable>
             </View>
+
+            {isSearchBarVisible && (
+                <View style={styles.searchBar}>
+                    <TextInput
+                        placeholder="Enter friend's email"
+                        value={email}
+                        onChangeText={setEmail}
+                        style={styles.textInput}
+                    />
+                    <Button onPress={handleAddFriend} style={styles.addButton}>Add Friend</Button>
+                </View>
+            )}
 
             <View className=" h-full" >
                 <TabsProvider
@@ -157,72 +175,6 @@ export default function Profile() {
             </View>
         </View>
     )
-=======
-    const handleAddFriend = async () => {
-        try {
-            const response = await addFriendByEmail({
-                variables: {
-                    userId: profile.id,
-                    email: email,
-                },
-            });
-            console.log(response.data.addFriendByEmail);
-            setEmail('');
-            setSearchBarVisible(false);
-            // Optionally: Update UI to show success message or refresh friend list
-        } catch (error) {
-            if (error.graphQLErrors) {
-              // Handle errors from the GraphQL server
-              error.graphQLErrors.map(({ message }) => console.log(message));
-            } else if (error.networkError) {
-              // Handle network errors here
-              console.log('Network error', error.networkError);
-            } else {
-              console.error('Error adding friend:', error);
-            }
-          }
-
-    };
-
-    return (
-        <View style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.name}>{profile.name}</Text>
-                <Text style={styles.totalMoves}>{profile.totalMoves} Moves</Text>
-                <Pressable onPress={() => setSearchBarVisible(!isSearchBarVisible)} style={styles.addFriendIcon}>
-                    <Icon name="user-plus" size={24} color="black" />
-                </Pressable>
-            </View>
-
-            {isSearchBarVisible && (
-                <View style={styles.searchBar}>
-                    <TextInput
-                        placeholder="Enter friend's email"
-                        value={email}
-                        onChangeText={setEmail}
-                        style={styles.textInput}
-                    />
-                    <Button onPress={handleAddFriend} style={styles.addButton}>Add Friend</Button>
-                </View>
-            )}
-
-            <TabsProvider defaultIndex={1} style={styles.tabsProvider}>
-                <Tabs style={styles.tabs}>
-                    <TabScreen label="Past Moves" icon="history">
-                        <View style={styles.tabContent}>
-                            {/* Render your past moves here */}
-                        </View>
-                    </TabScreen>
-                    <TabScreen label="Current Moves" icon="bag-suitcase">
-                        <View style={styles.tabContent}>
-                            {/* Render your current moves here */}
-                        </View>
-                    </TabScreen>
-                </Tabs>
-            </TabsProvider>
-        </View>
-    );
->>>>>>> b241ccd2a9cced5b8c91e81c3c37ac32abee8bdb
 }
 
 const styles = StyleSheet.create({
