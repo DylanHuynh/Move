@@ -105,10 +105,9 @@ export default MoveCard = (item) => {
                   With
                 </Text>
                 <View className="flex flex-row justify-evenly items-center">
-                  {/* <Avatar.Text size={24} label="XD" /> */}
-                  {moveObj.moveMembers.slice(0, 4).map((member) => {
+                  {moveObj.moveMembers.slice(0, 4).map((member, index) => {
                     return (
-                      <View className="items-center">
+                      <View key={index} className="items-center">
                         <Avatar.Text
                           className=""
                           size={48}

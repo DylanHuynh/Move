@@ -40,7 +40,7 @@ export default function App() {
             {/* <Stack.Screen name="Sign Up" component={SignUp} options={{headerShown: false}}/> */}
             <Stack.Screen name="About You" component={AboutYou} />
             <Stack.Screen name="Onboarding" component={Onboarding} />
-            <Stack.Screen name="Tab Screen" component={TabScreen} />
+            <Stack.Screen name="Tab Screen" component={TabScreen} options={{headerShown: false}} />
           </Stack.Navigator>
         </NavigationContainer>
       </PaperProvider>

@@ -55,10 +55,10 @@ export default function Explore() {
   ];
 
   const renderMoveCard = (item) => {
-    return <MoveCard move={item["item"]} />;
+    return <MoveCard move={item["item"]}/>;
   };
   return (
-    <View className="h-full w-full bg-background-color p-4">
+    <View className="h-full w-full bg-background-color pl-4 pr-4">
       <FlatList
         data={moves}
         renderItem={renderMoveCard}
