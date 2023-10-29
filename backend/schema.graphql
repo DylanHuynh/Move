@@ -25,6 +25,7 @@ type Mutation {
   createPreferences(userId: Int!, preference: String!): Preferences!
   addFriend(userId: Int!, friendId: Int!): String!
   addFriendByEmail(userId: Int!, email: String!): String!
+  updateMoveUserIds(moveId: Int!, userId: Int!): Move!
   deleteUser(userId: Int!): Boolean!
   deleteUsers: Boolean!
 }

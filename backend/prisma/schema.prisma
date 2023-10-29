@@ -8,67 +8,56 @@ datasource db {
 }
 
 model Chat {
-  id           Int        @id @default(sequence())
-  friendIds    Int[]
-  messageIds   Int[]
-  creationTime DateTime   @default(now())
-  owner        User       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  id           Int       @id @default(sequence())
+  creationTime DateTime  @default(now())
   ownerId      Int
   type         String
+  friendIds    Int[]
+  messageIds   Int[]
+  owner        User      @relation(fields: [ownerId], references: [id])
   messages     Message[]
   moves        Move[]
 }
 
 model User {
-  id           Int         @id @default(sequence())
-  name         String
-  email        String     @unique
-  calendarIds  Int[]
-  friendIds    Int[]
-  moveIds      Move[]
+  id          Int          @id @default(sequence())
+  name        String
+  email       String       @unique
+  calendarIds Int[]
+  friendIds   Int[]
+  chats       Chat[]
+  messages    Message[]
+  moveIds     Move[]
   preferences Preferences?
-  chats        Chat[]
-  messages     Message[]
-} // add age param
+}
 
 model Move {
   id          Int      @id @default(sequence())
-  title       String
   location    String
   time        DateTime
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      Int
-  userIds     Int[]
   description String
-  chatId      Int
-  chat        Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
   type        String
   status      String
+  chatId      Int
+  title       String
+  chat        Chat     @relation(fields: [chatId], references: [id])
+  user        User     @relation(fields: [userId], references: [id])
 }
 
 model Message {
   id        Int      @id @default(sequence())
-  chatId    Int
-  chat      Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
   timestamp DateTime @default(now())
-  authorId  Int
-  author    User     @relation(fields: [authorId], references: [id])
   text      String
+  authorId  Int
+  chatId    Int
+  author    User     @relation(fields: [authorId], references: [id])
+  chat      Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
 }
 
 model Preferences {
-  id         Int    @id @default(sequence())
-  userId     Int    @unique
-  user       User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  alcohol    Boolean
+  id      Int     @id @default(sequence())
+  userId  Int     @unique
+  alcohol Boolean
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
-
-
-
-// Some assumptions made:
-
-// A user can have multiple chats, so the relationship is set as such.
-// A chat can have multiple messages, so a one-to-many relationship is set between them.
-// A user can have multiple moves, so the relationship is set as such.
-// A chat can have multiple moves, so the relationship is set as such.
-// Each user has one unique preference. If a user can have multiple preferences, then the model needs adjustments.
