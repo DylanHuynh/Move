@@ -10,13 +10,13 @@ const axios = require('axios')
 const CHAT_HISTORY_MEMORY = 5;
 const OpenAI =  require('openai');
 const openai = new OpenAI({
-  apiKey: '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'
+  apiKey: process.env.OPENAI
 });
 
 const postLLM = async (prompt) => {
   const chatCompletion = await openai.chat.completions.create({
     messages: [{ role: 'user', content: prompt}],
-    model: 'gpt-3.5-turbo',
+    model: 'gpt-4',
   });
   return chatCompletion.choices[0].message.content;
 }
